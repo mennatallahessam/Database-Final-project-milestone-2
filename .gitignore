@@ -1,0 +1,85 @@
+# ==============================================================================
+# Git Ignore Configuration
+# CSCE 2501 – Fundamentals of Database Systems – Resale Properties Project
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Assignment Prompt Markdown Files (as requested)
+# ------------------------------------------------------------------------------
+Milestone_1_Prompt_Database_Design.md
+Milestone_2_Prompt_Crawling_and_Population.md
+*Prompt*.md
+*prompt*.md
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets (as requested)
+# ------------------------------------------------------------------------------
+.env
+*.env
+milestone2/.env
+!.env.example
+!milestone2/.env.example
+
+# ------------------------------------------------------------------------------
+# Crawler Raw HTML Downloads & State Databases (Heavy data files)
+# Per assignment specs: data/raw/ is git-ignored
+# ------------------------------------------------------------------------------
+milestone2/data/raw/
+data/raw/
+*.tmp
+*.sqlite
+*.sqlite3
+*.db
+
+# ------------------------------------------------------------------------------
+# Python Runtime & Bytecode
+# ------------------------------------------------------------------------------
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ------------------------------------------------------------------------------
+# Virtual Environments
+# ------------------------------------------------------------------------------
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ------------------------------------------------------------------------------
+# Logs & Temporary Execution Files
+# ------------------------------------------------------------------------------
+logs/
+milestone2/logs/
+*.log
+
+# ------------------------------------------------------------------------------
+# Editor & OS Artifacts
+# ------------------------------------------------------------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+

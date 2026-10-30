@@ -1,0 +1,9 @@
+# Milestone 2 Python Dependencies
+# CSCE 2501 – Fundamentals of Database Systems – Fall 2026
+
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pymysql>=1.1.0
+cryptography>=41.0.0
+faker>=20.0.0
+

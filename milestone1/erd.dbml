@@ -1,0 +1,130 @@
+// DBML Specification for Resale Properties Database (AqarExit)
+// Project: CSCE 2501 - Fundamentals of Database Systems - Fall 2026
+
+Table developer {
+  developer_id int [pk, increment]
+  name varchar(150) [not null, unique]
+  slug varchar(150) [unique]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table location {
+  location_id int [pk, increment]
+  parent_location_id int [null, ref: > location.location_id]
+  name varchar(150) [not null]
+  location_type varchar(30) [not null]
+  latitude decimal(9,6) [null]
+  longitude decimal(9,6) [null]
+
+  indexes {
+    (parent_location_id, name) [name: "uq_location_parent_name", unique]
+  }
+}
+
+Table development {
+  development_id int [pk, increment]
+  developer_id int [null, ref: > developer.developer_id]
+  location_id int [null, ref: > location.location_id]
+  name varchar(200) [not null]
+  latitude decimal(9,6) [null]
+  longitude decimal(9,6) [null]
+  source_url varchar(500) [null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (developer_id, name) [name: "uq_dev_developer_name", unique]
+  }
+}
+
+Table property_type {
+  property_type_id int [pk, increment]
+  name varchar(50) [not null, unique]
+}
+
+Table payment_method {
+  payment_method_id int [pk, increment]
+  name varchar(50) [not null, unique]
+}
+
+Table property {
+  property_id bigint [pk, increment]
+  source_listing_id varchar(100) [not null, unique]
+  source_url varchar(500) [not null]
+  title varchar(300) [null]
+  description mediumtext [null]
+  development_id int [null, ref: > development.development_id]
+  location_id int [not null, ref: > location.location_id]
+  property_type_id int [not null, ref: > property_type.property_type_id]
+  payment_method_id int [null, ref: > payment_method.payment_method_id]
+  area_sqm decimal(10,2) [not null]
+  bedrooms tinyint [null]
+  bathrooms tinyint [null]
+  price decimal(15,2) [not null]
+  market_price decimal(15,2) [null]
+  down_payment decimal(15,2) [null]
+  installment_amount decimal(15,2) [null]
+  installment_frequency varchar(50) [null]
+  installment_years decimal(4,1) [null]
+  remaining_balance decimal(15,2) [null]
+  gain_over_market_value decimal(15,2) [null]
+  gain_percentage decimal(7,2) [null]
+  discount_over_market_price decimal(15,2) [null]
+  contract_year smallint [null]
+  delivery_year smallint [null]
+  currency char(3) [not null, default: 'EGP']
+  scraped_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (location_id, property_type_id) [name: "idx_prop_loc_type"]
+    (development_id, property_type_id) [name: "idx_prop_dev_type"]
+    price [name: "idx_prop_price"]
+    contract_year [name: "idx_prop_contract_year"]
+  }
+}
+
+Table amenity {
+  amenity_id int [pk, increment]
+  name varchar(100) [not null, unique]
+}
+
+Table property_amenity {
+  property_id bigint [not null, ref: > property.property_id]
+  amenity_id int [not null, ref: > amenity.amenity_id]
+
+  indexes {
+    (property_id, amenity_id) [pk]
+    (amenity_id, property_id) [name: "idx_prop_amenity_reverse"]
+  }
+}
+
+Table app_user {
+  user_id int [pk, increment]
+  username varchar(50) [not null, unique]
+  email varchar(150) [not null, unique]
+  gender varchar(20) [null]
+  birthdate date [not null]
+  registered_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table user_focus_area {
+  user_id int [not null, ref: > app_user.user_id]
+  location_id int [not null, ref: > location.location_id]
+
+  indexes {
+    (user_id, location_id) [pk]
+  }
+}
+
+Table review {
+  review_id int [pk, increment]
+  user_id int [not null, ref: > app_user.user_id]
+  development_id int [not null, ref: > development.development_id]
+  rating tinyint [not null]
+  review_text text [null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (development_id, created_at) [name: "idx_review_dev_created"]
+  }
+}
+

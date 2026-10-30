@@ -1,0 +1,118 @@
+erDiagram
+    DEVELOPER ||--o{ DEVELOPMENT : "builds"
+    LOCATION ||--o{ LOCATION : "contains"
+    LOCATION ||--o{ DEVELOPMENT : "situated in"
+    LOCATION ||--o{ PROPERTY : "located in"
+    LOCATION ||--o{ USER_FOCUS_AREA : "focused by"
+    
+    DEVELOPMENT ||--o{ PROPERTY : "includes"
+    DEVELOPMENT ||--o{ REVIEW : "reviewed in"
+    
+    PROPERTY_TYPE ||--o{ PROPERTY : "classifies"
+    PAYMENT_METHOD ||--o{ PROPERTY : "financed through"
+    
+    PROPERTY ||--|{ PROPERTY_AMENITY : "features"
+    AMENITY ||--|{ PROPERTY_AMENITY : "equipped in"
+    
+    APP_USER ||--o{ USER_FOCUS_AREA : "focuses on"
+    APP_USER ||--o{ REVIEW : "submits"
+
+    DEVELOPER {
+        int developer_id PK
+        string name UK "Developer name"
+        string slug UK "URL slug"
+        datetime created_at
+    }
+
+    LOCATION {
+        int location_id PK
+        int parent_location_id FK "Nullable self-reference"
+        string name "Location/Area name"
+        string location_type "governorate | city | area"
+        decimal latitude
+        decimal longitude
+    }
+
+    DEVELOPMENT {
+        int development_id PK
+        int developer_id FK "Nullable"
+        int location_id FK "Nullable"
+        string name "Project/Compound name"
+        decimal latitude
+        decimal longitude
+        string source_url
+        datetime created_at
+    }
+
+    PROPERTY_TYPE {
+        int property_type_id PK
+        string name UK "Apartment, Villa, etc."
+    }
+
+    PAYMENT_METHOD {
+        int payment_method_id PK
+        string name UK "Cash, Installments, etc."
+    }
+
+    PROPERTY {
+        bigint property_id PK
+        string source_listing_id UK "AqarExit unique ID"
+        string source_url
+        string title
+        text description
+        int development_id FK "Nullable"
+        int location_id FK "Area"
+        int property_type_id FK "Unit type"
+        int payment_method_id FK "Nullable"
+        decimal area_sqm "Area in m²"
+        int bedrooms "Studio = 0"
+        int bathrooms
+        decimal price "Asking resale price"
+        decimal market_price "Current market valuation"
+        decimal down_payment "Cash required now"
+        decimal installment_amount
+        string installment_frequency
+        decimal installment_years
+        decimal remaining_balance
+        decimal gain_over_market_value
+        decimal gain_percentage
+        decimal discount_over_market_price
+        int contract_year "Contract signature year"
+        int delivery_year "Expected handover year"
+        string currency "Default EGP"
+        datetime scraped_at
+    }
+
+    AMENITY {
+        int amenity_id PK
+        string name UK "Pool, Gym, Elevator, etc."
+    }
+
+    PROPERTY_AMENITY {
+        bigint property_id PK, FK
+        int amenity_id PK, FK
+    }
+
+    APP_USER {
+        int user_id PK
+        string username UK
+        string email UK
+        string gender "male | female | other | prefer_not_to_say"
+        date birthdate "Used for age derivation"
+        datetime registered_at
+    }
+
+    USER_FOCUS_AREA {
+        int user_id PK, FK
+        int location_id PK, FK
+    }
+
+    REVIEW {
+        int review_id PK
+        int user_id FK
+        int development_id FK
+        int rating "CHECK 1 to 10"
+        text review_text
+        datetime created_at
+    }
+

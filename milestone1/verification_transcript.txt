@@ -1,0 +1,472 @@
+================================================================================
+CSCE 2501 - Milestone 1: Verification Transcript (verification.sql)
+================================================================================
+
+--- SECTION A: CONSTRAINT REJECTION PROOFS ---
+
+TEST C1: Check constraint ck_review_rating (rating = 0)
+SQL: INSERT INTO review (user_id, development_id, rating, review_text) VALUES (9001, 9001, 0, 'Invalid rating');
+REJECTED AS EXPECTED -> MySQL Error: (3819, "Check constraint 'ck_review_rating' is violated.")
+
+TEST C2: Check constraint ck_review_rating (rating = 11)
+SQL: INSERT INTO review (user_id, development_id, rating, review_text) VALUES (9001, 9001, 11, 'Invalid rating');
+REJECTED AS EXPECTED -> MySQL Error: (3819, "Check constraint 'ck_review_rating' is violated.")
+
+TEST C3: Unique constraint uq_app_user_email (duplicate email)
+SQL: INSERT INTO app_user (username, email, birthdate) VALUES ('another_user', 'dup@example.com', '1990-01-01');
+REJECTED AS EXPECTED -> MySQL Error: (1062, "Duplicate entry 'dup@example.com' for key 'app_user.uq_app_user_email'")
+
+TEST C4: Unique constraint uq_app_user_username (duplicate username)
+SQL: INSERT INTO app_user (username, email, birthdate) VALUES ('duplicate_user', 'different.email@example.com', '1990-01-01');
+REJECTED AS EXPECTED -> MySQL Error: (1062, "Duplicate entry 'duplicate_user' for key 'app_user.uq_app_user_username'")
+
+TEST C5: Foreign key constraint fk_property_type (non-existent property_type_id)
+SQL: INSERT INTO property (source_listing_id, source_url, location_id, property_type_id, area_sqm, price) VALUES ('BAD-FK', 'https://ex.com', 9001, 99999, 100, 1000000);
+REJECTED AS EXPECTED -> MySQL Error: (1452, 'Cannot add or update a child row: a foreign key constraint fails (`resale_properties`.`property`, CONSTRAINT `fk_property_type` FOREIGN KEY (`property_type_id`) REFERENCES `property_type` (`property_type_id`) ON DELETE RESTRICT ON UPDATE CASCADE)')
+
+TEST C6: Unique constraint uq_property_source_listing_id (duplicate natural ID)
+SQL: INSERT INTO property (source_listing_id, source_url, location_id, property_type_id, area_sqm, price) VALUES ('DUP-NAT-ID', 'https://ex.com/dup', 9001, 9001, 100, 1000000);
+REJECTED AS EXPECTED -> MySQL Error: (1062, "Duplicate entry 'DUP-NAT-ID' for key 'property.uq_property_source_listing_id'")
+
+TEST C7: Check constraint ck_property_price (negative price)
+SQL: INSERT INTO property (source_listing_id, source_url, location_id, property_type_id, area_sqm, price) VALUES ('NEG-PRICE', 'https://ex.com', 9001, 9001, 100, -50000);
+REJECTED AS EXPECTED -> MySQL Error: (3819, "Check constraint 'ck_property_price' is violated.")
+
+TEST C8: Check constraint ck_app_user_birthdate (birthdate in future / outside range)
+SQL: INSERT INTO app_user (username, email, birthdate) VALUES ('future_user', 'future@example.com', '2099-01-01');
+REJECTED AS EXPECTED -> MySQL Error: (3819, "Check constraint 'ck_app_user_birthdate' is violated.")
+
+--- SECTION B: TRANSACTIONAL DATA POPULATION, Q1-Q10 PROOFS & ROLLBACK ---
+
+--------------
+START TRANSACTION
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+INSERT INTO developer (developer_id, name, slug) VALUES
+(1, 'La Vista Developments', 'la-vista'),
+(2, 'Palm Hills Developments', 'palm-hills')
+--------------
+
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO location (location_id, parent_location_id, name, location_type, latitude, longitude) VALUES
+(101, NULL, 'Cairo', 'governorate', 30.044420, 31.235712),
+(102, 101, 'New Cairo', 'city', 30.026400, 31.491300),
+(103, 102, '5th Settlement', 'area', 30.007400, 31.428500)
+--------------
+
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO development (development_id, developer_id, location_id, name, latitude, longitude, source_url) VALUES
+(201, 1, 103, 'Patio Vida', 30.012500, 31.432000, 'https://aqarexit.com/en/projects/patio-vida'),
+(202, 2, 103, 'Palm Hills New Cairo', 30.018900, 31.450100, 'https://aqarexit.com/en/projects/palm-hills-nc')
+--------------
+
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO property_type (property_type_id, name) VALUES
+(1, 'Apartment'),
+(2, 'Villa'),
+(3, 'Townhouse')
+--------------
+
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO payment_method (payment_method_id, name) VALUES
+(1, 'Cash'),
+(2, 'Installments')
+--------------
+
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO amenity (amenity_id, name) VALUES
+(1, 'Swimming Pool'),
+(2, 'Elevator'),
+(3, 'Garage'),
+(4, '24/7 Security'),
+(5, 'Private Garden')
+--------------
+
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO property (
+    property_id, source_listing_id, source_url, title, description,
+    development_id, location_id, property_type_id, payment_method_id,
+    area_sqm, bedrooms, bathrooms, price, market_price, down_payment,
+    installment_amount, installment_frequency, installment_years, remaining_balance,
+    gain_over_market_value, gain_percentage, discount_over_market_price,
+    contract_year, delivery_year, currency
+) VALUES
+(501, 'OPP-001-AQA', 'https://aqarexit.com/en/buy/opportunity/opp-001', 'Prime Lake View Apartment', 'Luxury apartment in Patio Vida',
+ 201, 103, 1, 2, 176.00, 4, 3, 3600000.00, 5500000.00, 3600000.00, 350000.00, 'Quarterly', 6.0, 9340000.00, 1900000.00, 34.55, 1900000.00, 2021, 2026, 'EGP'),
+
+(502, 'OPP-002-AQA', 'https://aqarexit.com/en/buy/opportunity/opp-002', 'Standalone Villa with Garden', 'Corner villa in Palm Hills',
+ 202, 103, 2, 2, 320.00, 5, 5, 12500000.00, 16000000.00, 6000000.00, 650000.00, 'Quarterly', 4.0, 6500000.00, 3500000.00, 21.88, 3500000.00, 2020, 2025, 'EGP'),
+
+(503, 'OPP-003-AQA', 'https://aqarexit.com/en/buy/opportunity/opp-003', 'Modern Townhouse', 'Spacious family townhouse in Patio Vida',
+ 201, 103, 3, 2, 240.00, 3, 3, 8200000.00, 10000000.00, 4000000.00, 420000.00, 'Quarterly', 5.0, 4200000.00, 1800000.00, 18.00, 1800000.00, 2022, 2027, 'EGP'),
+
+(504, 'OPP-004-AQA', 'https://aqarexit.com/en/buy/opportunity/opp-004', 'Standalone Private Apartment', 'Independent residential building apartment',
+ NULL, 103, 1, 1, 150.00, 3, 2, 2800000.00, 3200000.00, 2800000.00, 0.00, 'Cash', 0.0, 0.00, 400000.00, 12.50, 400000.00, 2019, 2023, 'EGP')
+--------------
+
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO property_amenity (property_id, amenity_id) VALUES
+(501, 1), (501, 2), (501, 3), (501, 4),
+(502, 1), (502, 3), (502, 4), (502, 5),
+(503, 1), (503, 4),
+(504, 2), (504, 3)
+--------------
+
+Query OK, 12 rows affected (0.00 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO app_user (user_id, username, email, gender, birthdate) VALUES
+(1, 'ahmed_hassan', 'ahmed.hassan@example.com', 'male', '1988-05-14'),
+(2, 'nour_el_din', 'nour.eldin@example.com', 'female', '1995-11-22'),
+(3, 'omar_khalil', 'omar.khalil@example.com', 'male', '2001-02-10')
+--------------
+
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO user_focus_area (user_id, location_id) VALUES
+(1, 102), 
+(1, 103), 
+(2, 103), 
+(3, 101)
+--------------
+
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO review (review_id, user_id, development_id, rating, review_text) VALUES
+(1, 1, 201, 9, 'Exceptional build quality and quiet environment in Patio Vida.'),
+(2, 2, 201, 8, 'Great green landscapes, delivery was slightly delayed.'),
+(3, 1, 202, 10, 'Outstanding community management and security at Palm Hills.'),
+(4, 3, 202, 7, 'Good compound but maintenance fees are relatively high.')
+--------------
+
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--------------
+SELECT 'DEVELOPER' AS entity, COUNT(*) AS count FROM developer
+UNION ALL SELECT 'LOCATION', COUNT(*) FROM location
+UNION ALL SELECT 'DEVELOPMENT', COUNT(*) FROM development
+UNION ALL SELECT 'PROPERTY_TYPE', COUNT(*) FROM property_type
+UNION ALL SELECT 'PAYMENT_METHOD', COUNT(*) FROM payment_method
+UNION ALL SELECT 'AMENITY', COUNT(*) FROM amenity
+UNION ALL SELECT 'PROPERTY', COUNT(*) FROM property
+UNION ALL SELECT 'PROPERTY_AMENITY', COUNT(*) FROM property_amenity
+UNION ALL SELECT 'APP_USER', COUNT(*) FROM app_user
+UNION ALL SELECT 'USER_FOCUS_AREA', COUNT(*) FROM user_focus_area
+UNION ALL SELECT 'REVIEW', COUNT(*) FROM review
+--------------
+
++------------------+-------+
+| entity           | count |
++------------------+-------+
+| DEVELOPER        |     2 |
+| LOCATION         |     3 |
+| DEVELOPMENT      |     2 |
+| PROPERTY_TYPE    |     3 |
+| PAYMENT_METHOD   |     2 |
+| AMENITY          |     5 |
+| PROPERTY         |     4 |
+| PROPERTY_AMENITY |    12 |
+| APP_USER         |     3 |
+| USER_FOCUS_AREA  |     4 |
+| REVIEW           |     4 |
++------------------+-------+
+11 rows in set (0.01 sec)
+
+--------------
+INSERT INTO app_user (user_id, username, email, gender, birthdate)
+VALUES (99, 'new_investor', 'new.investor@example.com', 'female', '1992-08-15')
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+SELECT * FROM v_user_profile WHERE user_id = 99
+--------------
+
++---------+--------------+--------------------------+--------+------------+------+---------------------+
+| user_id | username     | email                    | gender | birthdate  | age  | registered_at       |
++---------+--------------+--------------------------+--------+------------+------+---------------------+
+|      99 | new_investor | new.investor@example.com | female | 1992-08-15 |   34 | 2026-10-30 17:40:27 |
++---------+--------------+--------------------------+--------+------------+------+---------------------+
+1 row in set (0.01 sec)
+
+--------------
+INSERT INTO review (review_id, user_id, development_id, rating, review_text)
+VALUES (99, 99, 201, 9, 'Recently inspected the site, looks very promising.')
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+SELECT * FROM review WHERE review_id = 99
+--------------
+
++-----------+---------+----------------+--------+----------------------------------------------------+---------------------+
+| review_id | user_id | development_id | rating | review_text                                        | created_at          |
++-----------+---------+----------------+--------+----------------------------------------------------+---------------------+
+|        99 |      99 |            201 |      9 | Recently inspected the site, looks very promising. | 2026-10-30 17:40:27 |
++-----------+---------+----------------+--------+----------------------------------------------------+---------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT 
+    r.review_id,
+    u.username,
+    r.rating,
+    r.review_text,
+    r.created_at
+FROM review r
+JOIN app_user u ON r.user_id = u.user_id
+WHERE r.development_id = 201
+ORDER BY r.created_at DESC
+--------------
+
++-----------+--------------+--------+----------------------------------------------------------------+---------------------+
+| review_id | username     | rating | review_text                                                    | created_at          |
++-----------+--------------+--------+----------------------------------------------------------------+---------------------+
+|         1 | ahmed_hassan |      9 | Exceptional build quality and quiet environment in Patio Vida. | 2026-10-30 17:40:27 |
+|         2 | nour_el_din  |      8 | Great green landscapes, delivery was slightly delayed.         | 2026-10-30 17:40:27 |
+|        99 | new_investor |      9 | Recently inspected the site, looks very promising.             | 2026-10-30 17:40:27 |
++-----------+--------------+--------+----------------------------------------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    pt.name AS property_type,
+    dev.name AS development_name,
+    COUNT(p.property_id) AS resale_inventory,
+    SUM(p.price) AS total_resale_amount,
+    AVG(p.gain_over_market_value) AS avg_gain_over_market_value
+FROM property p
+JOIN property_type pt ON p.property_type_id = pt.property_type_id
+JOIN development dev ON p.development_id = dev.development_id
+GROUP BY pt.name, dev.name
+ORDER BY pt.name, resale_inventory DESC, total_resale_amount DESC
+LIMIT 10
+--------------
+
++---------------+----------------------+------------------+---------------------+----------------------------+
+| property_type | development_name     | resale_inventory | total_resale_amount | avg_gain_over_market_value |
++---------------+----------------------+------------------+---------------------+----------------------------+
+| Apartment     | Patio Vida           |                1 |          3600000.00 |             1900000.000000 |
+| Townhouse     | Patio Vida           |                1 |          8200000.00 |             1800000.000000 |
+| Villa         | Palm Hills New Cairo |                1 |         12500000.00 |             3500000.000000 |
++---------------+----------------------+------------------+---------------------+----------------------------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    dev.name AS development_name,
+    loc.name AS development_location,
+    pt.name AS unit_type,
+    COUNT(p.property_id) AS listing_count,
+    ROUND(AVG(p.price / p.area_sqm), 2) AS avg_price_per_sqm
+FROM development dev
+JOIN location loc ON dev.location_id = loc.location_id
+LEFT JOIN property p ON dev.development_id = p.development_id
+LEFT JOIN property_type pt ON p.property_type_id = pt.property_type_id
+WHERE dev.development_id = 201
+GROUP BY dev.name, loc.name, pt.name
+--------------
+
++------------------+----------------------+-----------+---------------+-------------------+
+| development_name | development_location | unit_type | listing_count | avg_price_per_sqm |
++------------------+----------------------+-----------+---------------+-------------------+
+| Patio Vida       | 5th Settlement       | Apartment |             1 |          20454.55 |
+| Patio Vida       | 5th Settlement       | Townhouse |             1 |          34166.67 |
++------------------+----------------------+-----------+---------------+-------------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    loc.name AS area_name,
+    pt.name AS unit_type,
+    p.property_id,
+    p.source_listing_id,
+    p.price,
+    p.area_sqm,
+    ROUND(p.price / p.area_sqm, 2) AS property_price_per_sqm,
+    ROUND(AVG(p.price / p.area_sqm) OVER(PARTITION BY pt.property_type_id), 2) AS area_avg_price_per_sqm_for_type
+FROM property p
+JOIN location loc ON p.location_id = loc.location_id
+JOIN property_type pt ON p.property_type_id = pt.property_type_id
+WHERE p.location_id = 103
+--------------
+
++----------------+-----------+-------------+-------------------+-------------+----------+------------------------+---------------------------------+
+| area_name      | unit_type | property_id | source_listing_id | price       | area_sqm | property_price_per_sqm | area_avg_price_per_sqm_for_type |
++----------------+-----------+-------------+-------------------+-------------+----------+------------------------+---------------------------------+
+| 5th Settlement | Apartment |         501 | OPP-001-AQA       |  3600000.00 |   176.00 |               20454.55 |                        19560.61 |
+| 5th Settlement | Apartment |         504 | OPP-004-AQA       |  2800000.00 |   150.00 |               18666.67 |                        19560.61 |
+| 5th Settlement | Villa     |         502 | OPP-002-AQA       | 12500000.00 |   320.00 |               39062.50 |                        39062.50 |
+| 5th Settlement | Townhouse |         503 | OPP-003-AQA       |  8200000.00 |   240.00 |               34166.67 |                        34166.67 |
++----------------+-----------+-------------+-------------------+-------------+----------+------------------------+---------------------------------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    p.property_id,
+    p.source_listing_id,
+    p.title,
+    p.price,
+    loc.name AS area_name
+FROM property p
+JOIN location loc ON p.location_id = loc.location_id
+JOIN property_amenity pa ON p.property_id = pa.property_id
+WHERE p.location_id = 103
+  AND p.price BETWEEN 3000000.00 AND 10000000.00
+  AND pa.amenity_id IN (1, 4) 
+GROUP BY p.property_id, p.source_listing_id, p.title, p.price, loc.name
+HAVING COUNT(DISTINCT pa.amenity_id) = 2
+--------------
+
++-------------+-------------------+---------------------------+------------+----------------+
+| property_id | source_listing_id | title                     | price      | area_name      |
++-------------+-------------------+---------------------------+------------+----------------+
+|         501 | OPP-001-AQA       | Prime Lake View Apartment | 3600000.00 | 5th Settlement |
+|         503 | OPP-003-AQA       | Modern Townhouse          | 8200000.00 | 5th Settlement |
++-------------+-------------------+---------------------------+------------+----------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    d.developer_id,
+    d.name AS developer_name,
+    COUNT(p.property_id) AS resale_listing_count,
+    ROUND(AVG(p.price / p.area_sqm), 2) AS avg_price_per_sqm,
+    ROUND(AVG(p.down_payment), 2) AS avg_down_payment,
+    ROUND(AVG(p.gain_over_market_value), 2) AS avg_gain_over_market_value
+FROM developer d
+JOIN development dev ON d.developer_id = dev.developer_id
+JOIN property p ON dev.development_id = p.development_id
+GROUP BY d.developer_id, d.name
+ORDER BY resale_listing_count DESC, avg_gain_over_market_value DESC
+LIMIT 5
+--------------
+
++--------------+-------------------------+----------------------+-------------------+------------------+----------------------------+
+| developer_id | developer_name          | resale_listing_count | avg_price_per_sqm | avg_down_payment | avg_gain_over_market_value |
++--------------+-------------------------+----------------------+-------------------+------------------+----------------------------+
+|            1 | La Vista Developments   |                    2 |          27310.61 |       3800000.00 |                 1850000.00 |
+|            2 | Palm Hills Developments |                    1 |          39062.50 |       6000000.00 |                 3500000.00 |
++--------------+-------------------------+----------------------+-------------------+------------------+----------------------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    loc.name AS area_name,
+    pt.name AS property_type,
+    p.contract_year,
+    p.property_id,
+    p.source_listing_id,
+    p.price,
+    p.area_sqm
+FROM property p
+JOIN location loc ON p.location_id = loc.location_id
+JOIN property_type pt ON p.property_type_id = pt.property_type_id
+ORDER BY loc.name, pt.name, p.contract_year DESC
+--------------
+
++----------------+---------------+---------------+-------------+-------------------+-------------+----------+
+| area_name      | property_type | contract_year | property_id | source_listing_id | price       | area_sqm |
++----------------+---------------+---------------+-------------+-------------------+-------------+----------+
+| 5th Settlement | Apartment     |          2021 |         501 | OPP-001-AQA       |  3600000.00 |   176.00 |
+| 5th Settlement | Apartment     |          2019 |         504 | OPP-004-AQA       |  2800000.00 |   150.00 |
+| 5th Settlement | Townhouse     |          2022 |         503 | OPP-003-AQA       |  8200000.00 |   240.00 |
+| 5th Settlement | Villa         |          2020 |         502 | OPP-002-AQA       | 12500000.00 |   320.00 |
++----------------+---------------+---------------+-------------+-------------------+-------------+----------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT 
+    loc.name AS area_name,
+    COALESCE(dev.name, 'Standalone / No Development') AS development_name,
+    COUNT(p.property_id) AS property_count,
+    ROUND(AVG(p.installment_amount), 2) AS avg_installment_price,
+    ROUND(AVG(p.down_payment), 2) AS avg_down_payment,
+    ROUND(AVG(COALESCE(p.discount_over_market_price, p.market_price - p.price)), 2) AS avg_discount_over_market_price,
+    ROUND(AVG(YEAR(CURDATE()) - p.contract_year), 1) AS avg_age_of_contract_year,
+    ROUND(AVG(p.market_price), 2) AS avg_market_price
+FROM property p
+JOIN location loc ON p.location_id = loc.location_id
+LEFT JOIN development dev ON p.development_id = dev.development_id
+GROUP BY loc.name, dev.name
+--------------
+
++----------------+-----------------------------+----------------+-----------------------+------------------+--------------------------------+--------------------------+------------------+
+| area_name      | development_name            | property_count | avg_installment_price | avg_down_payment | avg_discount_over_market_price | avg_age_of_contract_year | avg_market_price |
++----------------+-----------------------------+----------------+-----------------------+------------------+--------------------------------+--------------------------+------------------+
+| 5th Settlement | Patio Vida                  |              2 |             385000.00 |       3800000.00 |                     1850000.00 |                      4.5 |       7750000.00 |
+| 5th Settlement | Standalone / No Development |              1 |                  0.00 |       2800000.00 |                      400000.00 |                      7.0 |       3200000.00 |
+| 5th Settlement | Palm Hills New Cairo        |              1 |             650000.00 |       6000000.00 |                     3500000.00 |                      6.0 |      16000000.00 |
++----------------+-----------------------------+----------------+-----------------------+------------------+--------------------------------+--------------------------+------------------+
+3 rows in set (0.00 sec)
+
+--------------
+ROLLBACK
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT 'developer' AS tbl, COUNT(*) AS row_count FROM developer
+UNION ALL SELECT 'location', COUNT(*) FROM location
+UNION ALL SELECT 'development', COUNT(*) FROM development
+UNION ALL SELECT 'property_type', COUNT(*) FROM property_type
+UNION ALL SELECT 'payment_method', COUNT(*) FROM payment_method
+UNION ALL SELECT 'amenity', COUNT(*) FROM amenity
+UNION ALL SELECT 'property', COUNT(*) FROM property
+UNION ALL SELECT 'property_amenity', COUNT(*) FROM property_amenity
+UNION ALL SELECT 'app_user', COUNT(*) FROM app_user
+UNION ALL SELECT 'user_focus_area', COUNT(*) FROM user_focus_area
+UNION ALL SELECT 'review', COUNT(*) FROM review
+--------------
+
++------------------+-----------+
+| tbl              | row_count |
++------------------+-----------+
+| developer        |         0 |
+| location         |         0 |
+| development      |         0 |
+| property_type    |         0 |
+| payment_method   |         0 |
+| amenity          |         0 |
+| property         |         0 |
+| property_amenity |         0 |
+| app_user         |         0 |
+| user_focus_area  |         0 |
+| review           |         0 |
++------------------+-----------+
+11 rows in set (0.00 sec)
+
+Bye

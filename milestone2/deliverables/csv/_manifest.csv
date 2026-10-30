@@ -1,0 +1,12 @@
+﻿table_name,db_row_count,csv_row_count,file_size_bytes,status
+property_type,6,6,97,MATCH
+payment_method,1,1,43,MATCH
+amenity,10,10,155,MATCH
+location,18,18,700,MATCH
+developer,38,38,2609,MATCH
+development,41,41,2218,MATCH
+property,42,42,25839,MATCH
+property_amenity,174,174,1054,MATCH
+app_user,40,40,3728,MATCH
+user_focus_area,100,100,770,MATCH
+review,120,120,18540,MATCH
