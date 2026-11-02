@@ -1,0 +1,55 @@
+﻿entity_type,raw_variant,resolved_canonical,action,rationale
+developer,lavista,La Vista Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,la vista,La Vista Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,la vista developments,La Vista Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,palm hills,Palm Hills Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,palm hills developments,Palm Hills Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,sodic,SODIC,MERGED,Corporate spelling/abbreviation normalization
+developer,emaar,Emaar Misr,MERGED,Corporate spelling/abbreviation normalization
+developer,emaar misr,Emaar Misr,MERGED,Corporate spelling/abbreviation normalization
+developer,orascom,Orascom Development,MERGED,Corporate spelling/abbreviation normalization
+developer,talaat moustafa,Talaat Moustafa Group (TMG),MERGED,Corporate spelling/abbreviation normalization
+developer,tmg,Talaat Moustafa Group (TMG),MERGED,Corporate spelling/abbreviation normalization
+developer,mountain view,Mountain View,MERGED,Corporate spelling/abbreviation normalization
+developer,tatweer misr,Tatweer Misr,MERGED,Corporate spelling/abbreviation normalization
+developer,mnhr,Madinet Masr (MNHD),MERGED,Corporate spelling/abbreviation normalization
+developer,madinet masr,Madinet Masr (MNHD),MERGED,Corporate spelling/abbreviation normalization
+developer,hassan allam,Hassan Allam Properties,MERGED,Corporate spelling/abbreviation normalization
+developer,al ahly sabbour,Al Ahly Sabbour,MERGED,Corporate spelling/abbreviation normalization
+developer,dorra,Dorra Group,MERGED,Corporate spelling/abbreviation normalization
+developer,al marasem,Al Marasem Development,MERGED,Corporate spelling/abbreviation normalization
+developer,inland,Inland Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,gates,Gates Developments,MERGED,Corporate spelling/abbreviation normalization
+developer,inertia,Inertia Egypt,MERGED,Corporate spelling/abbreviation normalization
+developer,misr italia,Misr Italia Properties,MERGED,Corporate spelling/abbreviation normalization
+development,SODIC West vs SODIC East,KEPT SEPARATE,NOT_MERGED,Geographically distinct developments under same parent
+development,Palm Hills October vs Palm Hills New Cairo,KEPT SEPARATE,NOT_MERGED,Geographically separate project entities
+development,Mountain View iCity New Cairo vs Mountain View iCity October,KEPT SEPARATE,NOT_MERGED,Separate master-planned communities
+development,Emaar Mivida vs Emaar Marassi,KEPT SEPARATE,NOT_MERGED,Different property portfolios (East Cairo vs. North Coast)
+property_type,شقة,Apartment (شقة),STANDARDIZED,Bilingual unit type classification
+property_type,apartment,Apartment (شقة),STANDARDIZED,Bilingual unit type classification
+property_type,فيلا,Villa (فيلا),STANDARDIZED,Bilingual unit type classification
+property_type,villa,Villa (فيلا),STANDARDIZED,Bilingual unit type classification
+property_type,تاون هاوس,Townhouse (تاون هاوس),STANDARDIZED,Bilingual unit type classification
+property_type,townhouse,Townhouse (تاون هاوس),STANDARDIZED,Bilingual unit type classification
+property_type,توين هاوس,Twin House (توين هاوس),STANDARDIZED,Bilingual unit type classification
+property_type,twin house,Twin House (توين هاوس),STANDARDIZED,Bilingual unit type classification
+property_type,دوبلكس,Duplex (دوبلكس),STANDARDIZED,Bilingual unit type classification
+property_type,duplex,Duplex (دوبلكس),STANDARDIZED,Bilingual unit type classification
+property_type,بنتهاوس,Penthouse (بنتهاوس),STANDARDIZED,Bilingual unit type classification
+property_type,penthouse,Penthouse (بنتهاوس),STANDARDIZED,Bilingual unit type classification
+property_type,شاليه,Chalet (شاليه),STANDARDIZED,Bilingual unit type classification
+property_type,chalet,Chalet (شاليه),STANDARDIZED,Bilingual unit type classification
+property_type,ستوديو,Studio (ستوديو),STANDARDIZED,Bilingual unit type classification
+property_type,studio,Studio (ستوديو),STANDARDIZED,Bilingual unit type classification
+property_type,اي فيلا,iVilla (اي فيلا),STANDARDIZED,Bilingual unit type classification
+property_type,ivilla,iVilla (اي فيلا),STANDARDIZED,Bilingual unit type classification
+property_type,محل,Shop (محل),STANDARDIZED,Bilingual unit type classification
+property_type,shop,Shop (محل),STANDARDIZED,Bilingual unit type classification
+property_type,مكتب,Office (مكتب),STANDARDIZED,Bilingual unit type classification
+property_type,office,Office (مكتب),STANDARDIZED,Bilingual unit type classification
+property_type,عيادة,Clinic (عيادة),STANDARDIZED,Bilingual unit type classification
+property_type,clinic,Clinic (عيادة),STANDARDIZED,Bilingual unit type classification
+property_type,تجاري,Commercial (تجاري),STANDARDIZED,Bilingual unit type classification
+property_type,commercial,Commercial (تجاري),STANDARDIZED,Bilingual unit type classification
+property_type,اداري,Office (مكتب),STANDARDIZED,Bilingual unit type classification

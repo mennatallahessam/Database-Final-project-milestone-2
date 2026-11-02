@@ -19,6 +19,8 @@ USE resale_properties;
 CREATE TABLE property_type (
     property_type_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
+    name_en VARCHAR(100) NULL,
+    name_ar VARCHAR(100) NULL,
     CONSTRAINT pk_property_type PRIMARY KEY (property_type_id),
     CONSTRAINT uq_property_type_name UNIQUE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -56,6 +58,8 @@ CREATE TABLE location (
     location_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     parent_location_id INT UNSIGNED NULL,
     name VARCHAR(150) NOT NULL,
+    name_en VARCHAR(150) NULL,
+    name_ar VARCHAR(150) NULL,
     location_type ENUM('governorate', 'city', 'area') NOT NULL,
     latitude DECIMAL(9,6) NULL,
     longitude DECIMAL(9,6) NULL,

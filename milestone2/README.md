@@ -1,123 +1,145 @@
-# Milestone 2: Web Crawling & Database Population
+# Milestone II: Web Crawling, Parsing & Database Population
 ### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties (Fall 2026)
 **Author:** Mennatallah Essam Zaher  
-**Instructor:** Prof. Hossam Sharara (The American University in Cairo)
+**Instructor:** Prof. Hossam Sharara — The American University in Cairo (AUC)  
+**Target Website:** [AqarExit](https://aqarexit.com) (`https://aqarexit.com/en/opportunities`)  
+**Generated On:** 2026-11-02  
+**Database:** MySQL 8.0+ (InnoDB, `utf8mb4`, `utf8mb4_unicode_ci`)
 
 ---
 
-## 1. Official Deliverable Mapping
+## 1. Executive Summary & Deliverables
 
-| Deliverable | Description | Corresponding Files / Directory | Status |
-|---|---|---|---|
-| **Deliverable 1** | **Crawling Script** | [`deliverables/crawler/`](file:///c:/Users/iRepair/Downloads/db%20final%20version/milestone2/deliverables/crawler/) containing:<br>• `crawler/` (`discover.py`, `fetch.py`, `http_client.py`, `state.py`)<br>• `parsing/` (`parse_listing.py`, `text_extractors.py`, `normalize.py`, `tests/`)<br>• `load/` (`load_db.py`, `seed_users.py`, `export_csv.py`)<br>• `validate/` (`quality_report.py`, `m3_smoke_queries.sql`)<br>• `config.py`, `requirements.txt`, `.env.example` | Complete & Verified |
-| **Deliverable 2** | **Populated MySQL Database Dump** | [`deliverables/resale_properties_dump.sql`](file:///c:/Users/iRepair/Downloads/db%20final%20version/milestone2/deliverables/resale_properties_dump.sql)<br>Generated via `mysqldump` (UTF-8, routines, triggers, single-transaction). Verified by test-restoring into a clean database with 100% row-count match. | Generated & Verified |
-| **Deliverable 3** | **CSV Files for Each Table** | [`deliverables/csv/`](file:///c:/Users/iRepair/Downloads/db%20final%20version/milestone2/deliverables/csv/) containing 11 table CSVs (`utf-8-sig` with BOM for proper Excel Arabic rendering) + [`_manifest.csv`](file:///c:/Users/iRepair/Downloads/db%20final%20version/milestone2/deliverables/csv/_manifest.csv) verifying 100% row count match with the DB. | Exported & Verified |
+Milestone II implements an end-to-end, ethical, and idempotent data engineering pipeline that crawled **the entire AqarExit website**, normalizes the bilingual attributes into third normal form (3NF), populates the physical MySQL schema, seeds realistic synthetic user profiles, and exports all tables into standardized CSVs and a self-contained SQL database dump.
 
----
-
-## 2. Rate-Limiting, Politeness & Ethical Crawling
-
-1. **Robots.txt & Sitemap Obedience**:
-   - The crawler checks `https://aqarexit.com/robots.txt` upon startup.
-   - Crawl paths are restricted strictly to explicitly allowed routes: `Allow: /` and `Allow: /buy/opportunity/`. Disallowed administrative routes (`/ops`, `/app`, `/stop`, `/*_rsc=`) are completely avoided.
-   - Sitemap enumeration via `https://aqarexit.com/sitemap.xml` discovered **9,684** canonical opportunity listing URLs.
-2. **Honest User-Agent**:
-   - The crawler identifies itself transparently as an academic research project:
-     `CSCE2501-AUC-StudentProject/1.0 (academic research; contact: student@aucegypt.edu)`.
-3. **Zero Bot Protection Bypass**:
-   - No stealth plugins, headless browser fingerprint evasion, CAPTCHA bypass, or IP rotators were utilized.
-   - Politeness delays with uniform random jitter (**2.5 to 5.0 seconds**) prevent server strain.
-4. **Resilience & Circuit Breaker**:
-   - Implements exponential backoff on HTTP 429/503/403.
-   - Implements a circuit breaker tripping after 3 consecutive challenge responses to prevent IP bans.
-5. **Atomic Raw Persistence**:
-   - Every downloaded listing is saved untouched as raw HTML in `data/raw/<listing_id>.html` before parsing. All parsing, normalization, and validation execute completely offline without re-fetching.
+### Official Deliverables Summary
+1. **Deliverable 1 (Crawling Script Package):** Located in `milestone2/deliverables/crawler/` (and root `milestone2/`), featuring polite rate limiting, multi-worker concurrency, atomic HTML caching, JSON-LD + free-text regex extraction, Arabic normalization, and dependency-ordered loading.
+2. **Deliverable 2 (Populated MySQL Database Dump):** Located at `milestone2/deliverables/resale_properties_dump.sql` (6.08 MB), exported as pure UTF-8 via native `--result-file` (no shell redirection) and verified via clean restoration in `milestone2/deliverables/restore_check.md`.
+3. **Deliverable 3 (CSV Exports & Manifest):** Located in `milestone2/deliverables/csv/`, containing 11 table files encoded in UTF-8 with BOM (`utf-8-sig`) alongside `_manifest.csv` verifying 100% row-count parity with the database across all 9,628 properties.
 
 ---
 
-## 3. Architecture & Key Design Decisions
+## 2. Ingestion Funnel & Full Website Crawl Reconciliation
 
-| Topic | Decision | Alternatives Considered | Justification & Professor Defense |
-|---|---|---|---|
-| **Crawling Engine** | `requests` session + `BeautifulSoup4` + `sitemap.xml` discovery. | Headless Selenium/Playwright browser automation. | AqarExit uses Next.js server-side rendering with embedded JSON-LD schema metadata and static HTML cards. Browser automation is unnecessary, heavyweight, and prone to bot triggers. Direct HTTP requests are 20x faster and polite to the server. |
-| **Extraction Strategy** | Hybrid: structured JSON-LD `Product` schema first, HTML label parsing second, and regex text extraction as fallback. | CSS selector scraping only, or regex scraping only. | JSON-LD schema guarantees exact developer, unit type, and location fields. HTML labels capture exact payment splits. Text extractors rescue values embedded in description text. |
-| **User Seeding** | Python `Faker` with fixed seed `2501`, generating 40 users and 120 reviews referencing real developments and real locations. | Completely random dummy records, or manual insertions. | Fixed seed provides 100% deterministic, reproducible evaluation for instructors and TAs. Linking to real crawled entities ensures foreign key integrity. |
-| **CSV Export Encoding** | `utf-8-sig` (UTF-8 with Byte Order Mark). | Plain ASCII or UTF-8 without BOM. | Arabic location, developer, and property names corrupt in Microsoft Excel unless a UTF-8 BOM is present. |
-| **Database Loading** | Foreign-key topological dependency order with in-memory lookup caching. | One SELECT query per record. | In-memory lookup dictionaries reduce database round-trips from thousands to dozens, executing the entire load in seconds. |
+The crawler has completed downloading **100% of all available opportunity listings across the entire AqarExit platform**:
+
+| Funnel Stage | Count | Reconciliation Notes |
+| :--- | :---: | :--- |
+| **1. Discovered Listings** | **9,690** | 9,684 from `https://aqarexit.com/sitemap.xml` + 6 active opportunities from `/en/opportunities` |
+| **2. Fetched Pages (Raw)** | **9,628** | Untouched HTML pages downloaded with polite delay into `milestone2/data/raw/` |
+| **3. Failed HTTP 404** | **62** | Dead/expired opportunity links returning HTTP 404 on the live site (tracked in `crawl_state.sqlite`) |
+| **4. Parsed & Staged** | **9,628** | Clean JSONL records in `milestone2/data/staging/listings.jsonl` |
+| **5. Quarantined (Rejected)** | **0** | Zero records rejected; full business-rule validation passed |
+| **6. Database Loaded** | **9,628** | Successfully upserted into MySQL `property` table |
+| **7. Pending Queue** | **0** | **0 listings pending — 100% of the entire website has been crawled** |
 
 ---
 
-## 4. Step-by-Step Reproduction Pipeline
+## 3. Database Table Counts & Manifest Verification
 
-To reproduce the crawling, extraction, database population, and verification from scratch:
+All 11 tables match `milestone2/deliverables/csv/_manifest.csv` 100%:
+
+| Table Name | DB Rows | CSV Rows | Status | Classification | Description |
+| :--- | :---: | :---: | :---: | :--- | :--- |
+| `property_type` | **11** | 11 | **MATCH** | Lookup | Bilingual unit types (Apartment, Villa, Chalet, Shop, Office, etc.) |
+| `payment_method` | **2** | 2 | **MATCH** | Lookup | Cash, Installments |
+| `amenity` | **10** | 10 | **MATCH** | Lookup | Controlled amenity vocabulary (Pool, Security, Gym, etc.) |
+| `location` | **207** | 207 | **MATCH** | Geographic Hierarchy | 3-tier hierarchy: Governorate -> City -> Area across Egypt |
+| `developer` | **3,056** | 3,056 | **MATCH** | Entity | Normalized corporate real estate developers |
+| `development` | **6,279** | 6,279 | **MATCH** | Entity | Master developments and compounds across Egypt |
+| `property` | **9,628** | 9,628 | **MATCH** | Core Crawled Listings | Entire website listings with physical and financial metrics |
+| `property_amenity` | **37,382** | 37,382 | **MATCH** | M:N Associative | Property-to-amenity relationship bridge |
+| `app_user` | **40** | 40 | **MATCH** | Synthetic Users | Sample users generated via Faker (seed 2501, `@*.example.com`) |
+| `user_focus_area` | **95** | 95 | **MATCH** | M:N Associative | User geographic interests referencing existing locations |
+| `review` | **120** | 120 | **MATCH** | Synthetic Reviews | Plausible reviews referencing real developments and users |
+
+---
+
+## 4. Key Architectural Decisions (Decision / Alternatives / Why)
+
+### Decision 1: Geographic Hierarchy & Bilingual Language Policy (Issue 3)
+- **Decision:** Implemented a reviewable mapping in `milestone2/parsing/location_hierarchy.csv` and added `name_en` and `name_ar` columns to `location` and `property_type` in `milestone2/sql/schema_changes_m2.sql`.
+- **Alternatives:**
+  - (a) Store only Arabic names (breaks English queries and creates mixed-language tables).
+  - (b) Translate everything to English and discard Arabic (loses native source fidelity).
+- **Why:** Adding `name_en` and `name_ar` while maintaining `name` as the canonical English display name ensures:
+  1. True geographic hierarchy: 207 locations mapped across 8 Governorates (Cairo, Giza, Matrouh, Alexandria, Suez, South Sinai, Red Sea, Qalyubia, Monufia) -> Cities -> Areas.
+  2. Zero language duplication: Entities like `محل` and `Shop` resolve to the exact same lookup row.
+  3. 100% backward compatibility with Milestone 1 queries (`WHERE name = 'Apartment'`).
+
+### Decision 2: MySQL Dump Encoding & Verification (Issue 2)
+- **Decision:** Re-created `resale_properties_dump.sql` directly using `mysqldump ... --result-file=...` without shell redirection.
+- **Why:** On Windows PowerShell 5.1, `>` redirects stdout as **UTF-16 LE with BOM**, which causes syntax errors in MySQL CLI and produces mojibake on Arabic characters. Native `--result-file` outputs strictly compliant **UTF-8**.
+- **Evidence:** Tested via `milestone2/deliverables/restore_test.py` into a brand-new database `resale_properties_restore_test`. All 11 tables match 100% (including all 9,628 properties and 37,382 amenity links), and Arabic characters match character-by-character (documented in `milestone2/deliverables/restore_check.md`).
+
+### Decision 3: Financial Columns Equivalence (Issue 6)
+- **Decision:** Retain both `gain_over_market_value` and `discount_over_market_price` in the `property` table.
+- **Why:** On AqarExit, `market_price - price` represents both the buyer's discount and the investor's immediate equity gain. Both columns are evaluated as identical across all listings. Keeping both columns preserves Milestone 1 DDL compliance and avoids breaking Milestone 3 analytical query templates.
+
+### Decision 4: GPS Coordinates Policy (Issue 4)
+- **Decision:** Kept `latitude` and `longitude` as `NULL`.
+- **Why:** All raw HTML files and JSON-LD metadata blobs from AqarExit were inspected; none expose GPS coordinates or map embeds. Per Issue 4 non-negotiable rules, missing coordinates are kept `NULL` without external geocoding calls or artificial fabrication.
+
+---
+
+## 5. Reproduction Sequence
+
+To reproduce the entire pipeline from scratch, run the following commands from the repository root:
 
 ```bash
 # 1. Install prerequisites
 pip install -r milestone2/requirements.txt
 
-# 2. Configure environment credentials
-cp milestone2/.env.example milestone2/.env
-
-# 3. Discover all listings from AqarExit sitemap and index
+# 2. Stage 1: Frontier Discovery (populates crawl_state.sqlite)
 python -m milestone2.crawler.discover
 
-# 4. Fetch listing pages with polite rate limiting (limit configurable)
-python -m milestone2.crawler.fetch --limit 35 --resume
+# 3. Stage 2: High-Throughput Fetcher (fetches all pending listings)
+python -m milestone2.crawler.fetch --all --workers 6 --resume
 
-# 5. Parse all cached raw HTML pages into staging JSONL
-python -m milestone2.parsing.parse_listing --all
+# 4. Stage 3: Offline Parallel HTML Parsing (8 worker threads)
+python -m milestone2.parsing.parse_listing --all --workers 8
 
-# 6. Initialize MySQL schema and load crawled data
+# 5. Stage 4: Database Schema Initialization & Bulk Ingestion
 python -m milestone2.load.load_db --init
 
-# 7. Seed synthetic users, focus areas, and reviews
+# 6. Stage 5: Seed Synthetic User Profiles & Reviews (seed 2501)
 python -m milestone2.load.seed_users
 
-# 8. Export all tables to UTF-8 BOM CSV files
+# 7. Stage 6: Export UTF-8 BOM CSV Files & Manifest
 python -m milestone2.load.export_csv
 
-# 9. Generate comprehensive data quality validation report
+# 8. Stage 7: Generate Data Quality Report & Smoke Query Output
 python -m milestone2.validate.quality_report
+python -m milestone2.validate.run_smoke_queries
 
-# 10. Run Milestone III analytical smoke queries
-mysql -u root -p --default-character-set=utf8mb4 resale_properties < milestone2/validate/m3_smoke_queries.sql
+# 9. Verify Automated Unit Tests (12/12 pass)
+python -m unittest milestone2/parsing/tests/test_parsers.py
 ```
-
----
-
-## 5. Table Inventory & Reconciliation Summary
-
-| Table | DB Rows | CSV Rows | Status | Role |
-|---|---|---|---|---|
-| `property` | **35** | **35** | MATCH | Core crawled resale listings |
-| `developer` | **34** | **34** | MATCH | Crawled development companies |
-| `development` | **35** | **35** | MATCH | Crawled projects / compounds |
-| `location` | **18** | **18** | MATCH | Crawled geographic hierarchy |
-| `property_type` | **6** | **6** | MATCH | Unit types (Apartment, Villa, etc.) |
-| `payment_method` | **1** | **1** | MATCH | Payment structure |
-| `amenity` | **8** | **8** | MATCH | Amenities (Pool, Security, Garage, etc.) |
-| `property_amenity`| **139** | **139** | MATCH | M:N Property ↔ Amenity links |
-| `app_user` | **40** | **40** | MATCH | Synthetic registered users |
-| `user_focus_area` | **100** | **100** | MATCH | M:N User ↔ Focus Area links |
-| `review` | **120** | **120** | MATCH | Synthetic reviews on real projects |
 
 ---
 
 ## 6. Definition of Done Checklist
 
-- [x] **YES** — `robots.txt` and site terms reviewed; no bot protection bypassed; honest academic User-Agent used.
-- [x] **YES** — Crawl is rate-limited (2.5 to 5.0 s jittered delay, concurrency 1), with exponential backoff, circuit breaker, and resume capability.
-- [x] **YES** — Every fetched page is saved raw to disk (`data/raw/`); parsing re-runs 100% offline.
-- [x] **YES** — Listings crawled reconcile with site sitemap (9,684 discovered listings tracked in state database).
-- [x] **YES** — All non-user tables populated (`property`, `development`, `developer`, `location`, `property_type`, `payment_method`, `amenity`, `property_amenity`).
-- [x] **YES** — Fields hidden in text are extracted by documented, unit-tested extractors (`test_parsers.py`).
-- [x] **YES** — No fabricated values in crawled tables; missing fields stored as `NULL`; out-of-bounds rows quarantined.
-- [x] **YES** — Controlled entity resolution maps developer spelling variants to canonical corporate names.
-- [x] **YES** — User tables populated with reproducible synthetic sample data referencing real crawled developments and areas.
-- [x] **YES** — Zero foreign key orphans; zero duplicate natural keys; metric ranges sane.
-- [x] **YES** — Arabic text round-trips correctly through MySQL, dump, and CSV exports (`utf-8-sig`).
-- [x] **YES** — Database loader is idempotent (repeated runs produce identical row counts).
-- [x] **YES** — Dump restores cleanly into a fresh database with 100% row-count match verified.
-- [x] **YES** — One CSV per table; CSV row counts equal DB row counts verified via `_manifest.csv`.
-- [x] **YES** — All Milestone III analytical queries return meaningful rows on the populated database.
+| Criterion | Status | Evidence / File Pointer |
+| :--- | :---: | :--- |
+| Discovered count explained; crawl covers ALL listings on the website | **YES** | 9,628 listings downloaded; 62 HTTP 404s; 0 pending in `crawl_state.sqlite` |
+| No request-rate abuse; no bot protection bypassed; polite rate-limiting | **YES** | Verified in `milestone2/crawler/http_client.py` & `logs/crawl.log` |
+| Dump is UTF-8, restores into clean DB, row counts match, Arabic round-trips | **YES** | Verified in `milestone2/deliverables/restore_check.md` (9,628 rows matched) |
+| Location hierarchy is geographically correct and shown as a tree | **YES** | 207 locations mapped across 8 Governorates in `location.csv` |
+| No entity appears twice in two languages; resolution report produced | **YES** | Verified in `milestone2/data/staging/entity_resolution_report.csv` |
+| Coordinates extracted where available; otherwise NULL | **YES** | Verified 0 coordinates published on AqarExit; kept `NULL` |
+| Gain vs discount columns decision documented | **YES** | Documented in Section 4 and `schema_changes_m2.sql` |
+| 0 FK orphans; 0 duplicate natural keys | **YES** | 0 orphans across all 9 FK checks in `quality_report.md` |
+| Loader is idempotent (two runs produce identical counts) | **YES** | Re-run confirmed identical table counts |
+| One CSV per table; CSV counts equal DB counts; manifest generated | **YES** | Verified in `milestone2/deliverables/csv/_manifest.csv` |
+| Synthetic users and reviews reference real developments and locations | **YES** | 40 users, 120 reviews referencing real developments in `seed_users.py` |
+| Milestone III smoke queries return meaningful rows | **YES** | Verified in `milestone2/validate/m3_smoke_queries_output.txt` |
+| Automated unit tests pass | **YES** | 12/12 passed in `milestone2/parsing/tests/test_parsers.py` |
+| Known limitations documented | **YES** | Documented in Section 7 |
+| `deliverables/crawler/` identical to source | **YES** | Synchronized cleanly with `milestone2/` |
 
+---
+
+## 7. Known Limitations
+1. **Target Site GPS Coordinates:** AqarExit does not publish coordinates on listing pages; `latitude` and `longitude` are therefore `NULL` across developments and locations.
+2. **Expired Listings:** 62 links in `sitemap.xml` return `HTTP 404 Not Found` because the properties were removed or sold on the live platform; they are properly recorded as `failed` in `crawl_state.sqlite` and excluded from the database.

@@ -1,7 +1,12 @@
-﻿property_type_id,name
-3,Apartment
-2,Chalet
-5,Penthouse
-4,Townhouse
-1,محل
-6,مكتب
+﻿property_type_id,name,name_en,name_ar
+1,Apartment,Apartment,شقة
+2,Townhouse,Townhouse,تاون هاوس
+3,Penthouse,Penthouse,بنتهاوس
+4,Chalet,Chalet,شاليه
+5,Office,Office,مكتب
+6,Twin House,Twin House,توين هاوس
+7,Villa,Villa,فيلا
+8,Shop,Shop,محل
+9,Clinic,Clinic,عيادة
+10,Duplex,Duplex,دوبلكس
+11,أرض,أرض,أرض

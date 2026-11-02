@@ -78,6 +78,26 @@ class TestParserExtraction(unittest.TestCase):
         self.assertEqual(resolve_property_type("شقة"), "Apartment")
         self.assertEqual(resolve_property_type("فيلا"), "Villa")
         self.assertEqual(resolve_property_type("تاون هاوس"), "Townhouse")
+        self.assertEqual(resolve_property_type("محل"), "Shop")
+        self.assertEqual(resolve_property_type("مكتب"), "Office")
+
+    def test_location_hierarchy_resolution(self):
+        from milestone2.parsing.normalize import load_location_hierarchy, resolve_location
+        hierarchy = load_location_hierarchy()
+        
+        # Test North Coast
+        loc_nc = resolve_location("الساحل الشمالي", hierarchy)
+        self.assertEqual(loc_nc["governorate_en"], "Matrouh")
+        self.assertEqual(loc_nc["city_en"], "North Coast")
+
+        # Test New Administrative Capital
+        loc_nac = resolve_location("العاصمة الإدارية الجديدة", hierarchy)
+        self.assertEqual(loc_nac["governorate_en"], "Cairo")
+
+        # Test 6th of October
+        loc_oct = resolve_location("6 أكتوبر", hierarchy)
+        self.assertEqual(loc_oct["governorate_en"], "Giza")
+        self.assertEqual(loc_oct["city_en"], "6th of October")
 
     def test_validation_and_quarantine(self):
         # Valid listing

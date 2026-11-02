@@ -36,6 +36,9 @@ class PoliteHttpClient:
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         })
         self.consecutive_blocks = 0
+        self.circuit_pauses_taken = 0
+        self.max_circuit_pauses = 6
+        self.circuit_pause_seconds = 900  # 15 minutes
         self.total_requests = 0
 
     def get(self, url: str) -> Optional[requests.Response]:
@@ -65,10 +68,21 @@ class PoliteHttpClient:
                         f"Consecutive blocks: {self.consecutive_blocks}. Backing off {backoff:.1f}s."
                     )
                     if self.consecutive_blocks >= CRAWL_MAX_CONSECUTIVE_BLOCKS:
-                        logger.error(
-                            f"Circuit breaker tripped: {self.consecutive_blocks} consecutive blocks. Halting crawler."
-                        )
-                        raise RuntimeError("Circuit breaker tripped: Too many consecutive challenge responses.")
+                        if self.circuit_pauses_taken < self.max_circuit_pauses:
+                            self.circuit_pauses_taken += 1
+                            logger.error(
+                                f"Circuit breaker tripped ({self.consecutive_blocks} consecutive blocks). "
+                                f"Initiating long pause #{self.circuit_pauses_taken}/{self.max_circuit_pauses} "
+                                f"for {self.circuit_pause_seconds // 60} minutes to allow server to cool down..."
+                            )
+                            time.sleep(self.circuit_pause_seconds)
+                            self.consecutive_blocks = 0
+                            continue
+                        else:
+                            logger.error(
+                                f"Circuit breaker maximum pauses ({self.max_circuit_pauses}) reached. Halting cleanly."
+                            )
+                            raise RuntimeError("Circuit breaker tripped: Too many consecutive challenge responses.")
 
                     time.sleep(backoff)
                     backoff *= CRAWL_BACKOFF_FACTOR

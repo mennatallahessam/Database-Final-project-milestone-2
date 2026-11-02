@@ -1,9 +1,17 @@
+import sys
+import re
 import json
 import argparse
 from pathlib import Path
 from decimal import Decimal
 from typing import Dict, Any, Optional
 import pymysql
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 from milestone2.config import (
     DB_HOST,
@@ -13,6 +21,13 @@ from milestone2.config import (
     DB_NAME,
     BASE_DIR,
     STAGING_DIR
+)
+from milestone2.parsing.normalize import (
+    load_location_hierarchy,
+    resolve_location,
+    resolve_property_type,
+    PROPERTY_TYPE_BILINGUAL,
+    generate_entity_resolution_report
 )
 
 def get_connection():
@@ -49,12 +64,48 @@ def init_database():
     conn.close()
     print("Schema initialized successfully.")
 
+def print_location_tree(cursor):
+    """Fetches and displays the location hierarchy as an indented text tree."""
+    cursor.execute("""
+        SELECT location_id, parent_location_id, name, name_en, name_ar, location_type
+        FROM location
+        ORDER BY location_type, name
+    """)
+    rows = cursor.fetchall()
+
+    by_parent: Dict[Optional[int], list] = {}
+    for r in rows:
+        pid = r["parent_location_id"]
+        by_parent.setdefault(pid, []).append(r)
+
+    print("\n========================= GEOGRAPHIC LOCATION TREE =========================")
+    for gov in by_parent.get(None, []):
+        gov_en = gov['name_en'] or gov['name']
+        gov_ar = gov['name_ar'] or ''
+        print(f"* Governorate: {gov_en} [{gov_ar}] (ID: {gov['location_id']})")
+        for city in by_parent.get(gov["location_id"], []):
+            city_en = city['name_en'] or city['name']
+            city_ar = city['name_ar'] or ''
+            print(f"  +-- City: {city_en} [{city_ar}] (ID: {city['location_id']})")
+            for area in by_parent.get(city["location_id"], []):
+                area_en = area['name_en'] or area['name']
+                area_ar = area['name_ar'] or ''
+                print(f"      |-- Area: {area_en} [{area_ar}] (ID: {area['location_id']})")
+    print("============================================================================\n")
+
 def load_staging_data():
     """Loads staged listings into MySQL database in FK dependency order."""
     staging_file = STAGING_DIR / "listings.jsonl"
     if not staging_file.exists():
         print(f"Staging file {staging_file} not found. Run parse_listing first.")
         return
+
+    # Generate entity resolution report
+    entity_report_path = STAGING_DIR / "entity_resolution_report.csv"
+    generate_entity_resolution_report(entity_report_path)
+    print(f"Generated entity resolution audit report: {entity_report_path}")
+
+    loc_hierarchy = load_location_hierarchy()
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -67,20 +118,25 @@ def load_staging_data():
     cache_developer: Dict[str, int] = {}
     cache_development: Dict[str, int] = {}
 
-    def get_or_create_property_type(name: str) -> int:
-        if name in cache_property_type:
-            return cache_property_type[name]
-        cursor.execute("SELECT property_type_id FROM property_type WHERE name = %s", (name,))
+    def get_or_create_property_type(raw_name: str) -> int:
+        canon_name = resolve_property_type(raw_name)
+        if canon_name in cache_property_type:
+            return cache_property_type[canon_name]
+        cursor.execute("SELECT property_type_id FROM property_type WHERE name = %s", (canon_name,))
         row = cursor.fetchone()
         if row:
             tid = row["property_type_id"]
         else:
-            cursor.execute("INSERT INTO property_type (name) VALUES (%s)", (name,))
+            bilingual = PROPERTY_TYPE_BILINGUAL.get(canon_name, (canon_name, raw_name))
+            cursor.execute(
+                "INSERT INTO property_type (name, name_en, name_ar) VALUES (%s, %s, %s)",
+                (canon_name, bilingual[0], bilingual[1])
+            )
             tid = cursor.lastrowid
-        cache_property_type[name] = tid
+        cache_property_type[canon_name] = tid
         return tid
 
-    def get_or_create_payment_method(name: str) -> int:
+    def get_or_create_payment_method(name: str) -> Optional[int]:
         if not name:
             return None
         if name in cache_payment_method:
@@ -108,57 +164,98 @@ def load_staging_data():
         cache_amenity[name] = aid
         return aid
 
-    def get_or_create_location(name: str, parent_id: Optional[int] = None, loc_type: str = "area") -> int:
-        if not name:
-            name = "Cairo"
+    def get_or_create_location_node(name: str, name_en: str, name_ar: str, parent_id: Optional[int], loc_type: str) -> int:
         key = f"{parent_id}_{name.lower()}"
         if key in cache_location:
             return cache_location[key]
-        cursor.execute("SELECT location_id FROM location WHERE name = %s AND (parent_location_id = %s OR (parent_location_id IS NULL AND %s IS NULL))", (name, parent_id, parent_id))
+        cursor.execute(
+            "SELECT location_id FROM location WHERE name = %s AND (parent_location_id = %s OR (parent_location_id IS NULL AND %s IS NULL))",
+            (name, parent_id, parent_id)
+        )
         row = cursor.fetchone()
         if row:
             lid = row["location_id"]
         else:
-            cursor.execute("INSERT INTO location (parent_location_id, name, location_type) VALUES (%s, %s, %s)", (parent_id, name, loc_type))
+            cursor.execute(
+                "INSERT INTO location (parent_location_id, name, name_en, name_ar, location_type) VALUES (%s, %s, %s, %s, %s)",
+                (parent_id, name, name_en, name_ar, loc_type)
+            )
             lid = cursor.lastrowid
         cache_location[key] = lid
         return lid
 
+    def resolve_and_load_location(raw_loc_name: Optional[str]) -> int:
+        loc_data = resolve_location(raw_loc_name, loc_hierarchy)
+        # 1. Governorate
+        gov_id = get_or_create_location_node(
+            name=loc_data["governorate_en"],
+            name_en=loc_data["governorate_en"],
+            name_ar=loc_data["governorate_ar"],
+            parent_id=None,
+            loc_type="governorate"
+        )
+        # 2. City
+        city_id = get_or_create_location_node(
+            name=loc_data["city_en"],
+            name_en=loc_data["city_en"],
+            name_ar=loc_data["city_ar"],
+            parent_id=gov_id,
+            loc_type="city"
+        )
+        # 3. Area
+        area_id = get_or_create_location_node(
+            name=loc_data["area_en"],
+            name_en=loc_data["area_en"],
+            name_ar=loc_data["area_ar"],
+            parent_id=city_id,
+            loc_type="area"
+        )
+        return area_id
+
     def get_or_create_developer(name: Optional[str]) -> Optional[int]:
         if not name:
             return None
-        if name in cache_developer:
-            return cache_developer[name]
-        cursor.execute("SELECT developer_id FROM developer WHERE name = %s", (name,))
+        clean_name = name.strip()[:150]
+        if clean_name in cache_developer:
+            return cache_developer[clean_name]
+        cursor.execute("SELECT developer_id FROM developer WHERE name = %s", (clean_name,))
         row = cursor.fetchone()
         if row:
             did = row["developer_id"]
         else:
-            slug = name.lower().replace(" ", "-")[:150]
-            cursor.execute("INSERT INTO developer (name, slug) VALUES (%s, %s)", (name, slug))
+            base_slug = re.sub(r"[^a-zA-Z0-9\-]", "-", clean_name.lower()).strip("-")[:130]
+            if not base_slug:
+                base_slug = f"dev-{len(cache_developer)+1}"
+            slug = base_slug
+            counter = 1
+            while True:
+                cursor.execute("SELECT developer_id FROM developer WHERE slug = %s", (slug,))
+                s_row = cursor.fetchone()
+                if not s_row:
+                    break
+                counter += 1
+                slug = f"{base_slug[:130]}-{counter}"
+            cursor.execute("INSERT INTO developer (name, slug) VALUES (%s, %s)", (clean_name, slug))
             did = cursor.lastrowid
-        cache_developer[name] = did
+        cache_developer[clean_name] = did
         return did
 
     def get_or_create_development(name: Optional[str], dev_id: Optional[int], loc_id: Optional[int]) -> Optional[int]:
         if not name:
             return None
-        key = f"{dev_id}_{name.lower()}"
+        clean_name = name.strip()[:200]
+        key = f"{dev_id}_{clean_name.lower()}"
         if key in cache_development:
             return cache_development[key]
-        cursor.execute("SELECT development_id FROM development WHERE name = %s AND (developer_id = %s OR (developer_id IS NULL AND %s IS NULL))", (name, dev_id, dev_id))
+        cursor.execute("SELECT development_id FROM development WHERE name = %s AND (developer_id = %s OR (developer_id IS NULL AND %s IS NULL))", (clean_name, dev_id, dev_id))
         row = cursor.fetchone()
         if row:
             d_id = row["development_id"]
         else:
-            cursor.execute("INSERT INTO development (developer_id, location_id, name) VALUES (%s, %s, %s)", (dev_id, loc_id, name))
+            cursor.execute("INSERT INTO development (developer_id, location_id, name) VALUES (%s, %s, %s)", (dev_id, loc_id, clean_name))
             d_id = cursor.lastrowid
         cache_development[key] = d_id
         return d_id
-
-    # 0. Ensure root governorate exists
-    root_cairo_id = get_or_create_location("Cairo", None, "governorate")
-    new_cairo_id = get_or_create_location("New Cairo", root_cairo_id, "city")
 
     # Read and process listings in batches
     loaded_properties = 0
@@ -176,8 +273,7 @@ def load_staging_data():
             pm_id = get_or_create_payment_method(rec.get("payment_method_name"))
             
             # Location
-            loc_name = rec.get("location_name") or "New Cairo"
-            loc_id = get_or_create_location(loc_name, new_cairo_id, "area")
+            loc_id = resolve_and_load_location(rec.get("location_name"))
 
             # Developer & Development
             dev_comp_id = get_or_create_developer(rec.get("developer_name"))
@@ -224,9 +320,9 @@ def load_staging_data():
                     delivery_year = VALUES(delivery_year)
             """
             cursor.execute(sql_prop, (
-                rec["source_listing_id"],
-                rec["source_url"],
-                rec.get("title"),
+                rec["source_listing_id"][:100],
+                rec["source_url"][:500],
+                rec.get("title")[:300] if rec.get("title") else None,
                 rec.get("description"),
                 development_id,
                 loc_id,
@@ -265,12 +361,20 @@ def load_staging_data():
                 """, (property_id, aid))
                 loaded_amenities += 1
 
+            if loaded_properties % 500 == 0:
+                conn.commit()
+                print(f" -> Upserted {loaded_properties} properties so far...")
+
     conn.commit()
-    conn.close()
 
     print("\n--- DATABASE LOAD SUMMARY ---")
     print(f"Properties Upserted: {loaded_properties}")
     print(f"Amenity Links Upserted: {loaded_amenities}")
+
+    # Print the full location tree
+    print_location_tree(cursor)
+
+    conn.close()
 
 def main():
     parser = argparse.ArgumentParser(description="Load Staged Property Data into MySQL")
@@ -283,4 +387,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
