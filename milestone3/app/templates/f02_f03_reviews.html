@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}F02 & F03: Project Reviews - AqarExit Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-2xl border border-gray-800">
+        <div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F02 / F03</span>
+                <h1 class="text-2xl font-bold text-white tracking-tight">Development Project Reviews</h1>
+            </div>
+            <p class="text-gray-400 text-sm mt-1">
+                Post verified 1–10 ratings (F02) and view aggregated ratings and reviewer comments (F03) for compounds across Egypt.
+            </p>
+        </div>
+
+        <!-- Development Selector Search Box -->
+        <form method="GET" action="{{ url_for('f02_f03_reviews') }}" class="flex items-center space-x-2">
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search development or developer..."
+                class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500 w-64">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-teal-500 text-black font-semibold text-sm hover:bg-teal-400 transition">
+                Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Search Results Dropdown/List if searching -->
+    {% if dev_search_results %}
+    <div class="glass-card p-4 rounded-xl border border-gray-800">
+        <p class="text-xs text-gray-400 mb-3 font-semibold uppercase">Search Results (Click to inspect or review):</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {% for dev in dev_search_results %}
+                <a href="{{ url_for('f02_f03_reviews', dev_id=dev.development_id) }}"
+                    class="p-3 rounded-lg bg-gray-900/60 hover:bg-gray-800 border border-gray-800 hover:border-teal-500/50 transition">
+                    <p class="text-sm font-bold text-white">{{ dev.name }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ dev.developer_name or 'Independent' }} • {{ dev.location_name or 'Egypt' }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if selected_dev %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: Development Summary Card (F03) -->
+        <div class="glass-card p-6 rounded-2xl border border-gray-800 space-y-6">
+            <div>
+                <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Project Overview</span>
+                <h2 class="text-2xl font-bold text-white mt-1">{{ selected_dev.development_name }}</h2>
+                <p class="text-sm text-gray-400 mt-1">Developer: <strong class="text-gray-200">{{ selected_dev.developer_name or 'N/A' }}</strong></p>
+            </div>
+
+            <!-- Rating Big Badge -->
+            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Average Rating</p>
+                    <div class="flex items-baseline space-x-2 mt-1">
+                        <span class="text-3xl font-extrabold text-amber-400">{{ selected_dev.avg_rating or 'n/a' }}</span>
+                        <span class="text-sm text-gray-500">/ 10</span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Total Reviews</p>
+                    <p class="text-2xl font-bold text-white mt-1">{{ selected_dev.total_reviews }}</p>
+                </div>
+            </div>
+
+            <!-- Geographic Path -->
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Location Hierarchy</p>
+                <div class="flex flex-wrap items-center gap-1.5 text-xs text-gray-300">
+                    {% for p in selected_dev.location_path %}
+                        <span class="bg-gray-800 px-2.5 py-1 rounded-md">{{ p.name }}</span>
+                        {% if not loop.last %}<span class="text-gray-600">→</span>{% endif %}
+                    {% else %}
+                        <span class="text-gray-500">{{ selected_dev.location_name or 'Egypt' }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- F02: Add Review Form -->
+            <div class="pt-6 border-t border-gray-800">
+                <h3 class="text-base font-bold text-white mb-3">Add Your Review (F02)</h3>
+                {% if current_user %}
+                    <form method="POST" action="{{ url_for('f02_post_review') }}" class="space-y-4">
+                        <input type="hidden" name="development_id" value="{{ selected_dev.development_id }}">
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Rating (1 to 10)</label>
+                            <input type="number" name="rating" min="1" max="10" required value="8"
+                                class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Review Text *</label>
+                            <textarea name="review_text" rows="3" required placeholder="Write your experience with this development project..."
+                                class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500"></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full py-2.5 rounded-xl bg-teal-500 text-black font-semibold text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/20">
+                            Submit Review
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-center space-y-2">
+                        <p class="text-xs text-gray-400">You must be signed in to submit a review.</p>
+                        <a href="{{ url_for('f01_register') }}" class="inline-block px-4 py-1.5 rounded-lg bg-teal-500 text-black text-xs font-bold hover:bg-teal-400 transition">
+                            Sign In / Register
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right: Paginated Reviews List (F03) -->
+        <div class="lg:col-span-2 glass-card p-6 rounded-2xl border border-gray-800 space-y-6">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                <h3 class="text-lg font-bold text-white">Community Reviews ({{ review_data.total_reviews }})</h3>
+                <span class="text-xs text-gray-500">Newest first</span>
+            </div>
+
+            {% if review_data.reviews %}
+                <div class="space-y-4">
+                    {% for rev in review_data.reviews %}
+                        <div class="p-4 rounded-xl bg-gray-900/60 border border-gray-800/80 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-300">
+                                        {{ rev.username[:1].upper() }}
+                                    </div>
+                                    <span class="text-sm font-semibold text-gray-200">{{ rev.username }}</span>
+                                </div>
+                                <div class="flex items-center space-x-1.5 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full text-xs font-bold text-amber-400">
+                                    <span>★</span>
+                                    <span>{{ rev.rating }} / 10</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-300 leading-relaxed">{{ rev.review_text }}</p>
+                            <p class="text-xs text-gray-500 pt-1">{{ rev.created_at }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if review_data.total_pages > 1 %}
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800 text-xs">
+                        <span class="text-gray-500">Page {{ review_data.page }} of {{ review_data.total_pages }}</span>
+                        <div class="flex space-x-2">
+                            {% if review_data.page > 1 %}
+                                <a href="{{ url_for('f02_f03_reviews', dev_id=selected_dev.development_id, page=review_data.page - 1) }}"
+                                    class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700">Previous</a>
+                            {% endif %}
+                            {% if review_data.page < review_data.total_pages %}
+                                <a href="{{ url_for('f02_f03_reviews', dev_id=selected_dev.development_id, page=review_data.page + 1) }}"
+                                    class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700">Next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-12 space-y-3">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 flex items-center justify-center text-gray-500 text-xl">
+                        ✎
+                    </div>
+                    <p class="text-base font-semibold text-gray-300">No reviews yet for this development</p>
+                    <p class="text-xs text-gray-500 max-w-sm mx-auto">Be the first to share your evaluation and rating using the form on the left.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

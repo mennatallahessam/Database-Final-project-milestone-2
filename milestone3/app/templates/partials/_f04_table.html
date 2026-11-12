@@ -1,0 +1,52 @@
+<div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+            <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+                <tr>
+                    <th class="py-3 px-4">#</th>
+                    <th class="py-3 px-4">Development Project</th>
+                    <th class="py-3 px-4">Developer</th>
+                    <th class="py-3 px-4 text-right {% if highlight == 'inventory' %}text-teal-400{% endif %}">Inventory</th>
+                    <th class="py-3 px-4 text-right {% if highlight == 'amount' %}text-teal-400{% endif %}">Resale Capital</th>
+                    <th class="py-3 px-4 text-right">Avg Price/m²</th>
+                    <th class="py-3 px-4 text-right {% if highlight == 'gain' %}text-teal-400{% endif %}">Avg Gain</th>
+                    <th class="py-3 px-4 text-right">Total Gain</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                {% for r in rows %}
+                    <tr class="hover:bg-gray-800/40 transition">
+                        <td class="py-3 px-4 font-mono text-gray-500">{{ loop.index }}</td>
+                        <td class="py-3 px-4 font-bold text-white">
+                            <a href="{{ url_for('f05_dev_location', dev_id=r.development_id) }}" class="hover:text-teal-400 transition">
+                                {{ r.development_name }}
+                            </a>
+                        </td>
+                        <td class="py-3 px-4 text-gray-400">{{ r.developer_name or 'N/A' }}</td>
+                        <td class="py-3 px-4 text-right font-bold {% if highlight == 'inventory' %}text-teal-400{% else %}text-white{% endif %}">
+                            {{ r.resale_inventory }} units
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono {% if highlight == 'amount' %}text-teal-400 font-bold{% endif %}">
+                            {{ "{:,.0f}".format(r.total_resale_amount or 0) }} EGP
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono">
+                            {{ "{:,.0f}".format(r.avg_price_sqm or 0) }} EGP
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono {% if highlight == 'gain' %}text-teal-400 font-bold{% else %}text-emerald-400{% endif %}">
+                            +{{ "{:,.0f}".format(r.avg_gain or 0) }} EGP
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-emerald-400">
+                            +{{ "{:,.0f}".format(r.total_gain or 0) }} EGP
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-gray-500">
+                            No projects match the selected threshold criteria.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}F04: Top 10 Projects by Type - AqarExit Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header & Controls -->
+    <div class="glass-card p-6 rounded-2xl border border-gray-800">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F04</span>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Top 10 Projects by Property Type</h1>
+                </div>
+                <p class="text-gray-400 text-sm mt-1">
+                    Rankings computed across three measures: <strong>Resale Inventory</strong>, <strong>Resale Amount</strong>, and <strong>Gain Over Market Value</strong>.
+                </p>
+            </div>
+
+            <!-- Filter Controls Form -->
+            <form method="GET" action="{{ url_for('f04_top_projects') }}" class="flex flex-wrap items-center gap-3">
+                <!-- Property Type Dropdown -->
+                <div>
+                    <select name="type_id" onchange="this.form.submit()"
+                        class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                        {% for pt in property_types %}
+                            <option value="{{ pt.property_type_id }}" {% if pt.property_type_id == selected_type_id %}selected{% endif %}>
+                                {{ pt.name }} {% if pt.name_ar %}({{ pt.name_ar }}){% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Minimum Listings Threshold -->
+                <div class="flex items-center space-x-2 bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700">
+                    <span class="text-xs text-gray-400">Min Listings:</span>
+                    <input type="number" name="min_listings" value="{{ min_listings }}" min="1" max="50" onchange="this.form.submit()"
+                        class="w-12 bg-transparent text-white text-xs font-bold focus:outline-none text-center">
+                </div>
+
+                <!-- Outlier Toggle -->
+                <label class="flex items-center space-x-2 bg-gray-900 px-3 py-2 rounded-xl border border-gray-700 cursor-pointer text-xs text-gray-300">
+                    <input type="checkbox" name="exclude_outliers" value="1" {% if exclude_outliers %}checked{% endif %} onchange="this.form.submit()"
+                        class="rounded bg-gray-800 border-gray-700 text-teal-500 focus:ring-teal-500">
+                    <span>Exclude Outliers (1k-300k EGP/m²)</span>
+                </label>
+            </form>
+        </div>
+
+        {% if excluded_count > 0 %}
+            <div class="mt-4 pt-3 border-t border-gray-800 text-xs text-amber-400 flex items-center space-x-1">
+                <span>ℹ Note: <strong>{{ excluded_count }}</strong> properties of this type without a development project were excluded.</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Chart Visualization -->
+    <div class="glass-card p-6 rounded-2xl border border-gray-800">
+        <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Top 10 Resale Inventory Comparison (Chart)</h3>
+        <div class="h-64">
+            <canvas id="f04Chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabs for the Three Measures -->
+    <div class="space-y-4">
+        <div class="border-b border-gray-800 flex space-x-4">
+            <button onclick="showTab('tab-inventory')" id="btn-inventory"
+                class="pb-3 text-sm font-bold border-b-2 border-teal-400 text-teal-400 transition">
+                1. By Resale Inventory (Listings)
+            </button>
+            <button onclick="showTab('tab-amount')" id="btn-amount"
+                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">
+                2. By Resale Capital (EGP)
+            </button>
+            <button onclick="showTab('tab-gain')" id="btn-gain"
+                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">
+                3. By Gain Over Market Value
+            </button>
+        </div>
+
+        <!-- Tab 1: Inventory -->
+        <div id="tab-inventory" class="tab-content">
+            {% with rows = top_data.top_inventory, highlight = 'inventory' %}
+                {% include "partials/_f04_table.html" %}
+            {% endwith %}
+        </div>
+
+        <!-- Tab 2: Amount -->
+        <div id="tab-amount" class="tab-content hidden">
+            {% with rows = top_data.top_amount, highlight = 'amount' %}
+                {% include "partials/_f04_table.html" %}
+            {% endwith %}
+        </div>
+
+        <!-- Tab 3: Gain -->
+        <div id="tab-gain" class="tab-content hidden">
+            {% with rows = top_data.top_gain, highlight = 'gain' %}
+                {% include "partials/_f04_table.html" %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+
+        ['inventory', 'amount', 'gain'].forEach(name => {
+            const btn = document.getElementById('btn-' + name);
+            if ('tab-' + name === tabId) {
+                btn.className = 'pb-3 text-sm font-bold border-b-2 border-teal-400 text-teal-400 transition';
+            } else {
+                btn.className = 'pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition';
+            }
+        });
+    }
+
+    // Chart.js Top Inventory
+    const ctx = document.getElementById('f04Chart').getContext('2d');
+    const labels = [{% for r in top_data.top_inventory %}"{{ r.development_name }}",{% endfor %}];
+    const data = [{% for r in top_data.top_inventory %}{{ r.resale_inventory }},{% endfor %}];
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Resale Units Available',
+                data: data,
+                backgroundColor: 'rgba(20, 184, 166, 0.7)',
+                borderColor: '#14b8a6',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+        }
+    });
+</script>
+{% endblock %}

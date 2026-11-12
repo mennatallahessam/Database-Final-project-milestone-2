@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AqarExit Resale Database (Milestone III){% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Hero Header -->
+    <div class="relative overflow-hidden rounded-2xl glass-card p-8 border border-gray-800">
+        <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-3xl space-y-4">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-semibold">
+                <span>MySQL 8.0 Remote Analytics Engine</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Egyptian Real-Estate Resale Market Intelligence
+            </h1>
+            <p class="text-gray-400 text-base leading-relaxed">
+                Connects directly to an external remote MySQL database containing 9,628 scraped AqarExit opportunity listings, 6,279 master developments, and 207 geographic hierarchy areas.
+            </p>
+        </div>
+        
+        <!-- Live Remote Database Metrics -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-gray-800/80">
+            <div>
+                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Properties Crawled</p>
+                <p class="text-2xl font-bold text-white mt-1">9,628</p>
+                <p class="text-xs text-emerald-400 mt-0.5">100% of website</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Developments</p>
+                <p class="text-2xl font-bold text-white mt-1">6,279</p>
+                <p class="text-xs text-teal-400 mt-0.5">Master compounds</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Developers</p>
+                <p class="text-2xl font-bold text-white mt-1">3,056</p>
+                <p class="text-xs text-cyan-400 mt-0.5">Corporate builders</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Geographic Areas</p>
+                <p class="text-2xl font-bold text-white mt-1">207</p>
+                <p class="text-xs text-indigo-400 mt-0.5">3-tier hierarchy</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group 1: User Profiles & Development Reviews -->
+    <div class="space-y-4">
+        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+            <span>Part 1: Account Management & Development Reviews</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- F01 Card -->
+            <a href="{{ url_for('f01_register') }}" class="glass-card p-6 rounded-xl hover:border-teal-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded">F01</span>
+                        <span class="text-gray-500 group-hover:text-teal-400 transition">→</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mt-3 group-hover:text-teal-300 transition">User Registration</h3>
+                    <p class="text-sm text-gray-400 mt-1">
+                        Register user accounts with validated demographics (email, username, gender, birthdate, dynamically derived age) and multi-select geographic focus areas in a single atomic transaction.
+                    </p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-800 text-xs text-gray-500">
+                    Tables: <code>app_user</code>, <code>user_focus_area</code>, <code>v_user_profile</code>
+                </div>
+            </a>
+
+            <!-- F02 / F03 Card -->
+            <a href="{{ url_for('f02_f03_reviews') }}" class="glass-card p-6 rounded-xl hover:border-teal-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded">F02 / F03</span>
+                        <span class="text-gray-500 group-hover:text-teal-400 transition">→</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mt-3 group-hover:text-teal-300 transition">Development Reviews</h3>
+                    <p class="text-sm text-gray-400 mt-1">
+                        Post verified 1-10 project ratings with textual reviews and inspect existing community feedback, average score distributions, and reviewer history for any compound.
+                    </p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-800 text-xs text-gray-500">
+                    Tables: <code>review</code>, <code>development</code>, <code>developer</code>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Group 2: Resale Market Analytics -->
+    <div class="space-y-4">
+        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <span>Part 2: Real-Estate Market Analytics (F04 - F10)</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- F04 -->
+            <a href="{{ url_for('f04_top_projects') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F04</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Top 10 Projects by Type</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Ranks projects across three tabs: resale inventory, total resale capital, and average gain over market value with outlier exclusion toggles.
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Aggregation & Windowing</span>
+            </a>
+
+            <!-- F05 -->
+            <a href="{{ url_for('f05_dev_location') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F05</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Development Deep Dive</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Inspects developer, full location path, real GPS coordinates status, and price/sqm breakdown across all unit types.
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Breadcrumb Hierarchy</span>
+            </a>
+
+            <!-- F06 -->
+            <a href="{{ url_for('f06_area_properties') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F06</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Area Hierarchy Explorer</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Explores all properties in any governorate or city using Recursive CTEs with unit type averages and paginated sortable listings.
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Recursive CTE</span>
+            </a>
+
+            <!-- F07 -->
+            <a href="{{ url_for('f07_amenity_filter') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F07</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Multi-Amenity Search</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Filters properties by geographic area, price bounds, and selected amenities enforcing strict relational division (has ALL amenities).
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Relational Division</span>
+            </a>
+
+            <!-- F08 -->
+            <a href="{{ url_for('f08_top_developers') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F08</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Top 5 Real-Estate Developers</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Identifies market-leading builders ranked by inventory with average price/sqm, down payment ratio, and buyer gain metrics.
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Developer Analytics</span>
+            </a>
+
+            <!-- F09 -->
+            <a href="{{ url_for('f09_area_type_year') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F09</span>
+                    <h3 class="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition">Area × Type × Year Matrix</h3>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Multi-dimensional summary slicing resale opportunities across geographic areas, property types, and contract signing years.
+                    </p>
+                </div>
+                <span class="text-xs text-gray-500 mt-4">Multi-Dimension Slicing</span>
+            </a>
+
+            <!-- F10 -->
+            <a href="{{ url_for('f10_averages') }}" class="glass-card p-6 rounded-xl hover:border-emerald-500/50 transition group flex flex-col justify-between md:col-span-2 lg:col-span-3">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">F10</span>
+                        <span class="text-xs text-teal-400 border border-teal-500/30 px-2 py-0.5 rounded">CSV Export Included</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mt-3 group-hover:text-emerald-300 transition">Area & Development Benchmark Averages</h3>
+                    <p class="text-sm text-gray-400 mt-1">
+                        Computes comprehensive averages per (area, development): average installment, required down payment, property count, discount over market price, contract vintage age, and market valuation with column sorting and single-click CSV export.
+                    </p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-800 text-xs text-gray-500 flex justify-between items-center">
+                    <span>Includes sample contribution counts to prevent NULL skew</span>
+                    <span class="text-emerald-400 font-medium">Export CSV →</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

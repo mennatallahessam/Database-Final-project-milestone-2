@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}F10: Area & Development Averages - AqarExit Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header & Controls -->
+    <div class="glass-card p-6 rounded-2xl border border-gray-800">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F10</span>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Area & Development Benchmark Averages</h1>
+                </div>
+                <p class="text-gray-400 text-sm mt-1">
+                    Multi-column aggregate metrics per (Area, Development Project) with non-NULL sample verification to prevent skewed averages.
+                </p>
+            </div>
+
+            <!-- Export CSV Action Button -->
+            <div>
+                <a href="{{ url_for('f10_export_csv', area_id=selected_area_id, min_prop=min_prop, sort=sort_col, dir=sort_dir) }}"
+                    class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/20">
+                    <span>⬇ Export CSV</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filter Form -->
+        <form method="GET" action="{{ url_for('f10_averages') }}" class="mt-6 pt-4 border-t border-gray-800 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Area Filter -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Filter by Area (Optional)</label>
+                <select name="area_id" onchange="this.form.submit()"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    <option value="">-- All Geographic Areas --</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc.location_id }}" {% if loc.location_id == selected_area_id %}selected{% endif %}>
+                            {{ loc.name }} {% if loc.name_ar %}({{ loc.name_ar }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Min Properties Filter -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Min Number of Properties</label>
+                <input type="number" name="min_prop" value="{{ min_prop }}" min="1" max="100" onchange="this.form.submit()"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+            </div>
+
+            <!-- Sort Column -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Sort Metric</label>
+                <select name="sort" onchange="this.form.submit()"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    <option value="property_count" {% if sort_col == 'property_count' %}selected{% endif %}>Property Count</option>
+                    <option value="avg_installment" {% if sort_col == 'avg_installment' %}selected{% endif %}>Avg Installment</option>
+                    <option value="avg_down_payment" {% if sort_col == 'avg_down_payment' %}selected{% endif %}>Avg Down Payment</option>
+                    <option value="avg_discount" {% if sort_col == 'avg_discount' %}selected{% endif %}>Avg Discount</option>
+                    <option value="avg_contract_age" {% if sort_col == 'avg_contract_age' %}selected{% endif %}>Avg Contract Age</option>
+                    <option value="avg_market_price" {% if sort_col == 'avg_market_price' %}selected{% endif %}>Avg Market Price</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <!-- Benchmark Table -->
+    <div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+                    <tr>
+                        <th class="py-3 px-4">Area</th>
+                        <th class="py-3 px-4">Development</th>
+                        <th class="py-3 px-4 text-right">Units Count</th>
+                        <th class="py-3 px-4 text-right">Avg Installment</th>
+                        <th class="py-3 px-4 text-right">Avg Down Payment</th>
+                        <th class="py-3 px-4 text-right">Avg Discount</th>
+                        <th class="py-3 px-4 text-right">Avg Contract Age</th>
+                        <th class="py-3 px-4 text-right">Avg Market Price</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                    {% for r in table_data.averages %}
+                        <tr class="hover:bg-gray-800/40 transition">
+                            <td class="py-3 px-4 font-bold text-white">
+                                {{ r.area_name }}
+                                {% if r.area_name_ar %}<span class="text-gray-500 font-arabic ml-1">({{ r.area_name_ar }})</span>{% endif %}
+                            </td>
+                            <td class="py-3 px-4 font-bold text-teal-400">
+                                <a href="{{ url_for('f05_dev_location', dev_id=r.development_id) }}" class="hover:underline">
+                                    {{ r.development_name }}
+                                </a>
+                            </td>
+                            <td class="py-3 px-4 text-right font-bold text-white">{{ r.property_count }}</td>
+                            
+                            <!-- Avg Installment -->
+                            <td class="py-3 px-4 text-right font-mono">
+                                {% if r.avg_installment %}
+                                    {{ "{:,.0f}".format(r.avg_installment) }} EGP
+                                    <span class="block text-[10px] text-gray-500">({{ r.installment_count }}/{{ r.property_count }})</span>
+                                {% else %}
+                                    <span class="text-gray-600">n/a</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Avg Down Payment -->
+                            <td class="py-3 px-4 text-right font-mono">
+                                {% if r.avg_down_payment %}
+                                    {{ "{:,.0f}".format(r.avg_down_payment) }} EGP
+                                    <span class="block text-[10px] text-gray-500">({{ r.down_payment_count }}/{{ r.property_count }})</span>
+                                {% else %}
+                                    <span class="text-gray-600">n/a</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Avg Discount -->
+                            <td class="py-3 px-4 text-right font-mono text-emerald-400">
+                                {% if r.avg_discount %}
+                                    {{ "{:,.0f}".format(r.avg_discount) }} EGP
+                                    <span class="block text-[10px] text-gray-500">({{ r.discount_count }}/{{ r.property_count }})</span>
+                                {% else %}
+                                    <span class="text-gray-600">n/a</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Avg Contract Age -->
+                            <td class="py-3 px-4 text-right font-mono text-cyan-400">
+                                {% if r.avg_contract_age is not none %}
+                                    {{ r.avg_contract_age }} yrs
+                                    <span class="block text-[10px] text-gray-500">({{ r.contract_year_count }}/{{ r.property_count }})</span>
+                                {% else %}
+                                    <span class="text-gray-600">n/a</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Avg Market Price -->
+                            <td class="py-3 px-4 text-right font-mono font-bold text-white">
+                                {% if r.avg_market_price %}
+                                    {{ "{:,.0f}".format(r.avg_market_price) }} EGP
+                                    <span class="block text-[10px] text-gray-500">({{ r.market_price_count }}/{{ r.property_count }})</span>
+                                {% else %}
+                                    <span class="text-gray-600">n/a</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="py-8 text-center text-gray-500">
+                                No projects meet the minimum property threshold of {{ min_prop }}.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="p-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Page {{ table_data.page }} (Min {{ min_prop }} listings)</span>
+            <div class="flex space-x-2">
+                {% if table_data.page > 1 %}
+                    <a href="{{ url_for('f10_averages', area_id=selected_area_id, min_prop=min_prop, sort=sort_col, dir=sort_dir, page=table_data.page - 1) }}"
+                        class="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:bg-gray-800">Previous</a>
+                {% endif %}
+                <a href="{{ url_for('f10_averages', area_id=selected_area_id, min_prop=min_prop, sort=sort_col, dir=sort_dir, page=table_data.page + 1) }}"
+                    class="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:bg-gray-800">Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

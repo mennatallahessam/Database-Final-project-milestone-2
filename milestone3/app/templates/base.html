@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AqarExit Market Intelligence - Milestone III{% endblock %}</title>
+    <!-- Tailwind CSS (CDN for rapid professional styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        .font-arabic {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .table-sticky th {
+            position: sticky;
+            top: 0;
+            background: #111827;
+            z-index: 10;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-card border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center font-black text-black text-xl shadow-lg shadow-teal-500/20">
+                            A
+                        </div>
+                        <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-teal-400 bg-clip-text text-transparent">
+                            AqarExit Analytics
+                        </span>
+                    </a>
+                    <span class="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                        Milestone III
+                    </span>
+                </div>
+
+                <!-- Nav Links -->
+                <nav class="hidden lg:flex items-center space-x-1 text-sm font-medium">
+                    <a href="{{ url_for('index') }}" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition">Dashboard</a>
+                    <div class="relative group">
+                        <button class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-1">
+                            <span>Account & Reviews</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-48 rounded-xl glass-card py-2 shadow-2xl border border-gray-800 hidden group-hover:block">
+                            <a href="{{ url_for('f01_register') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F01: User Register</a>
+                            <a href="{{ url_for('f02_f03_reviews') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F02/F03: Project Reviews</a>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <button class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-1">
+                            <span>Market Analytics</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-56 rounded-xl glass-card py-2 shadow-2xl border border-gray-800 hidden group-hover:block">
+                            <a href="{{ url_for('f04_top_projects') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F04: Top Projects by Type</a>
+                            <a href="{{ url_for('f05_dev_location') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F05: Development Deep Dive</a>
+                            <a href="{{ url_for('f06_area_properties') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F06: Area Hierarchy & Listings</a>
+                            <a href="{{ url_for('f07_amenity_filter') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F07: Amenities Multi-Filter</a>
+                            <a href="{{ url_for('f08_top_developers') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F08: Top 5 Developers</a>
+                            <a href="{{ url_for('f09_area_type_year') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F09: Area × Type × Year</a>
+                            <a href="{{ url_for('f10_averages') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60">F10: Area-Project Averages</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Current User Badge -->
+                <div class="flex items-center space-x-3">
+                    {% if current_user %}
+                        <div class="flex items-center space-x-2 bg-gray-800/60 px-3 py-1.5 rounded-lg border border-gray-700/50">
+                            <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+                            <span class="text-xs text-gray-300 font-medium">{{ current_user.username }}</span>
+                            <a href="{{ url_for('logout') }}" class="text-xs text-rose-400 hover:underline ml-1">Sign Out</a>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('f01_register') }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-500 text-black hover:bg-teal-400 transition shadow-md shadow-teal-500/20">
+                            Register / Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages Container -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-3 mb-6">
+                    {% for category, message in messages %}
+                        <div class="p-4 rounded-xl text-sm font-medium border flex items-center justify-between
+                            {% if category == 'success' %} bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                            {% elif category == 'error' %} bg-rose-500/10 border-rose-500/30 text-rose-300
+                            {% elif category == 'warning' %} bg-amber-500/10 border-amber-500/30 text-amber-300
+                            {% else %} bg-sky-500/10 border-sky-500/30 text-sky-300 {% endif %}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer with Proof of Remote Host -->
+    <footer class="glass-card border-t border-gray-800 py-4 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+            <div class="flex items-center space-x-2">
+                <span>CSCE 2501 Fundamentals of Database Systems (AUC)</span>
+                <span>•</span>
+                <span>Author: Mennatallah Essam Zaher</span>
+            </div>
+            
+            <!-- Visible Remote Host Guard Proof -->
+            <div class="flex items-center space-x-2 bg-gray-900/80 px-3 py-1 rounded-full border border-gray-700/80 text-emerald-400 font-mono">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Connected Remote Host: <strong>{{ remote_db_host }}</strong></span>
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
