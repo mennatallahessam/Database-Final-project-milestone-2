@@ -9,6 +9,7 @@ from pathlib import Path
 from flask import (
     Flask, render_template, request, redirect, url_for, flash, session, Response
 )
+import pymysql
 from dotenv import load_dotenv
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
