@@ -55,32 +55,62 @@
 
                 <!-- Nav Links -->
                 <nav class="hidden lg:flex items-center space-x-1 text-sm font-semibold text-slate-600">
-                    <a href="{{ url_for('index') }}" class="px-3.5 py-2 rounded-lg hover:text-teal-700 hover:bg-teal-50/80 transition">Dashboard</a>
+                    <a href="{{ url_for('index') }}" class="px-3.5 py-2 rounded-xl hover:text-teal-700 hover:bg-teal-50/80 transition">Dashboard</a>
                     
-                    <div class="relative group">
-                        <button class="px-3.5 py-2 rounded-lg hover:text-teal-700 hover:bg-teal-50/80 transition flex items-center space-x-1">
+                    <!-- Account & Reviews Dropdown -->
+                    <div class="relative dropdown-menu">
+                        <button type="button" class="dropdown-trigger px-3.5 py-2 rounded-xl hover:text-teal-700 hover:bg-teal-50/80 transition flex items-center space-x-1 cursor-pointer focus:outline-none" aria-haspopup="true" aria-expanded="false">
                             <span>Account & Reviews</span>
-                            <svg class="w-4 h-4 ml-0.5 text-slate-400 group-hover:text-teal-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-4 h-4 ml-0.5 text-slate-400 dropdown-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="absolute left-0 mt-2 w-52 rounded-xl bg-white py-2 shadow-xl border border-slate-200 hidden group-hover:block z-50">
-                            <a href="{{ url_for('f01_register') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F01: User Registration</a>
-                            <a href="{{ url_for('f02_f03_reviews') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F02/F03: Project Reviews</a>
+                        <!-- Seamless bridge with pt-1.5 prevents accidental hover exit -->
+                        <div class="dropdown-content absolute left-0 top-full pt-1.5 w-60 hidden z-50">
+                            <div class="rounded-2xl bg-white p-2 shadow-xl border border-slate-200/90 ring-1 ring-slate-900/5">
+                                <a href="{{ url_for('f01_register') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                    <span class="font-bold text-teal-700 mr-1.5">F01</span> User Registration
+                                </a>
+                                <a href="{{ url_for('f02_f03_reviews') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                    <span class="font-bold text-teal-700 mr-1.5">F02/03</span> Project Reviews
+                                </a>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="relative group">
-                        <button class="px-3.5 py-2 rounded-lg hover:text-teal-700 hover:bg-teal-50/80 transition flex items-center space-x-1">
+                    <!-- Market Analytics Dropdown -->
+                    <div class="relative dropdown-menu">
+                        <button type="button" class="dropdown-trigger px-3.5 py-2 rounded-xl hover:text-teal-700 hover:bg-teal-50/80 transition flex items-center space-x-1 cursor-pointer focus:outline-none" aria-haspopup="true" aria-expanded="false">
                             <span>Market Analytics</span>
-                            <svg class="w-4 h-4 ml-0.5 text-slate-400 group-hover:text-teal-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-4 h-4 ml-0.5 text-slate-400 dropdown-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="absolute left-0 mt-2 w-64 rounded-xl bg-white py-2 shadow-xl border border-slate-200 hidden group-hover:block z-50">
-                            <a href="{{ url_for('f04_top_projects') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F04: Top Projects by Type</a>
-                            <a href="{{ url_for('f05_dev_location') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F05: Development Deep Dive</a>
-                            <a href="{{ url_for('f06_area_properties') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F06: Area Hierarchy & Listings</a>
-                            <a href="{{ url_for('f07_amenity_filter') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F07: Amenities Multi-Filter</a>
-                            <a href="{{ url_for('f08_top_developers') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F08: Top 5 Developers</a>
-                            <a href="{{ url_for('f09_area_type_year') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F09: Area × Type × Year</a>
-                            <a href="{{ url_for('f10_averages') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/60 font-medium">F10: Area-Project Averages</a>
+                        <!-- Seamless bridge with pt-1.5 prevents accidental hover exit -->
+                        <div class="dropdown-content absolute left-0 top-full pt-1.5 w-72 hidden z-50">
+                            <div class="rounded-2xl bg-white p-2 shadow-xl border border-slate-200/90 ring-1 ring-slate-900/5 divide-y divide-slate-100">
+                                <div class="space-y-0.5 pb-1">
+                                    <a href="{{ url_for('f04_top_projects') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F04</span> Top Projects by Type
+                                    </a>
+                                    <a href="{{ url_for('f05_dev_location') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F05</span> Development Deep Dive
+                                    </a>
+                                    <a href="{{ url_for('f06_area_properties') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F06</span> Area Hierarchy & Listings
+                                    </a>
+                                    <a href="{{ url_for('f07_amenity_filter') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-700 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F07</span> Amenities Multi-Filter
+                                    </a>
+                                </div>
+                                <div class="space-y-0.5 pt-1">
+                                    <a href="{{ url_for('f08_top_developers') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F08</span> Top 5 Developers
+                                    </a>
+                                    <a href="{{ url_for('f09_area_type_year') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F09</span> Area × Type × Year Matrix
+                                    </a>
+                                    <a href="{{ url_for('f10_averages') }}" class="block px-3.5 py-2 rounded-lg text-sm text-slate-700 hover:text-teal-800 hover:bg-teal-50/80 font-medium transition">
+                                        <span class="font-bold text-teal-700 mr-1.5">F10</span> Area & Project Benchmarks
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -140,6 +170,82 @@
             </div>
         </div>
     </footer>
+
+    <!-- Global Dropdown Controller (Click to Keep Open + Zero-Flicker Hover) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+
+            dropdowns.forEach(menu => {
+                const trigger = menu.querySelector('.dropdown-trigger');
+                const content = menu.querySelector('.dropdown-content');
+                const chevron = menu.querySelector('.dropdown-chevron');
+                let leaveTimeout = null;
+
+                function open() {
+                    clearTimeout(leaveTimeout);
+                    dropdowns.forEach(other => {
+                        if (other !== menu) {
+                            other.querySelector('.dropdown-content')?.classList.add('hidden');
+                            other.querySelector('.dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+                            other.querySelector('.dropdown-chevron')?.classList.remove('rotate-180');
+                        }
+                    });
+                    content.classList.remove('hidden');
+                    trigger.setAttribute('aria-expanded', 'true');
+                    chevron?.classList.add('rotate-180');
+                }
+
+                function closeWithDelay(ms = 350) {
+                    leaveTimeout = setTimeout(() => {
+                        content.classList.add('hidden');
+                        trigger.setAttribute('aria-expanded', 'false');
+                        chevron?.classList.remove('rotate-180');
+                    }, ms);
+                }
+
+                function toggle() {
+                    const isClosed = content.classList.contains('hidden');
+                    if (isClosed) {
+                        open();
+                    } else {
+                        content.classList.add('hidden');
+                        trigger.setAttribute('aria-expanded', 'false');
+                        chevron?.classList.remove('rotate-180');
+                    }
+                }
+
+                // Click to toggle and stay open
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggle();
+                });
+
+                // Hover open & grace period
+                menu.addEventListener('mouseenter', () => {
+                    open();
+                });
+
+                menu.addEventListener('mouseleave', () => {
+                    closeWithDelay(350);
+                });
+
+                // Keep open when clicking inside dropdown content
+                content.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+
+            // Click outside anywhere on document closes all open dropdowns
+            document.addEventListener('click', () => {
+                dropdowns.forEach(menu => {
+                    menu.querySelector('.dropdown-content')?.classList.add('hidden');
+                    menu.querySelector('.dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+                    menu.querySelector('.dropdown-chevron')?.classList.remove('rotate-180');
+                });
+            });
+        });
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>
