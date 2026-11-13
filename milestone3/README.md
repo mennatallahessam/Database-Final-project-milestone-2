@@ -66,7 +66,71 @@ review                               120                      120    MATCH
 
 ---
 
-## 4. Key Architectural Decisions (Decision / Alternatives / Why)
+## 4. Visual Interface & Feature Screenshots Gallery
+
+All high-resolution verification screenshots of the live application are stored in [`deliverables/demo/screenshots/`](deliverables/demo/screenshots/):
+
+### Executive Analytics Dashboard
+> Live counter metrics showing 9,628 opportunity listings, 6,279 master developments, and 207 geographic areas across Egypt.
+![Executive Analytics Dashboard](deliverables/demo/screenshots/00_dashboard.png)
+
+---
+
+### F01: User Registration & Focus Areas
+> Atomic transaction user registration with multi-select focus areas and dynamic age derivation via MySQL view `v_user_profile`.
+![F01 User Registration](deliverables/demo/screenshots/01_f01_registration.png)
+
+---
+
+### F02 & F03: Development Reviews & Community Ratings
+> Search autocomplete across 6,279 projects, 1–10 integer rating, and paginated community reviews sorted newest-first.
+![F02 & F03 Project Reviews](deliverables/demo/screenshots/02_f02_f03_reviews.png)
+
+---
+
+### F04: Top 10 Projects by Property Type
+> Ranks development projects across (1) Resale Inventory, (2) Resale Capital, and (3) Average Market Gain with Chart.js visualization.
+![F04 Top 10 Projects](deliverables/demo/screenshots/03_f04_top_projects.png)
+
+---
+
+### F05: Development Deep Dive & Unit Pricing
+> Full geographic breadcrumb, developer identity, and breakdown of inventory and price per sqm across all property types.
+![F05 Development Deep Dive](deliverables/demo/screenshots/04_f05_dev_deep_dive.png)
+
+---
+
+### F06: Area Hierarchy & Listings (Recursive CTE)
+> Traverses Governorate $\to$ City $\to$ Area tree via MySQL 8 Recursive Common Table Expression with paginated listings table.
+![F06 Area Hierarchy](deliverables/demo/screenshots/05_f06_area_properties.png)
+
+---
+
+### F07: Amenities Multi-Filter (Relational Division)
+> Relational division query (`HAVING COUNT(DISTINCT amenity_id) = N`) with toggle for `ALL` vs `ANY` selected amenities.
+![F07 Amenities Filter](deliverables/demo/screenshots/06_f07_amenities_filter.png)
+
+---
+
+### F08: Top 5 Developers by Resale Inventory
+> Market leader rankings by listing inventory, average price/sqm, required down payment amount and percentage, and total gain.
+![F08 Top 5 Developers](deliverables/demo/screenshots/07_f08_top_developers.png)
+
+---
+
+### F09: Area × Property Type × Contract Year Matrix
+> Multi-dimensional matrix grouping opportunities with drill-down links to view matching property listings.
+![F09 Area Type Year Matrix](deliverables/demo/screenshots/08_f09_matrix_slicing.png)
+
+---
+
+### F10: Area & Development Benchmark Averages & CSV Export
+> Multi-column benchmark averages with sample contribution counts (`(12/15)`) and single-click UTF-8 BOM CSV export.
+![F10 Benchmark Averages](deliverables/demo/screenshots/09_f10_benchmark_averages.png)
+
+---
+
+## 5. Key Architectural Decisions (Decision / Alternatives / Why)
 
 ### Decision 1: Remote Host Guard & Safe Credential Management
 - **Decision:** Implemented a strict startup guard in `db.py` that halts if `DB_HOST` is local, and kept credentials in git-ignored `.env` with a committed `.env.example`.
@@ -93,7 +157,7 @@ review                               120                      120    MATCH
 
 ---
 
-## 5. How to Run the Application
+## 6. How to Run the Application
 
 ### Option A: One-Command Start (Windows)
 ```cmd
@@ -121,7 +185,7 @@ python -m milestone3.app.main
 
 ---
 
-## 6. Testing & Quality Verification
+## 7. Testing & Quality Verification
 
 All tests execute against real database tables and measure exact execution timings:
 
@@ -138,7 +202,7 @@ python -m milestone3.tools.smoke_test --allow-local
 
 ---
 
-## 7. Definition of Done Checklist
+## 8. Definition of Done Checklist
 
 - [x] **Remote Database Hosting:** App communicates with remote MySQL server; startup guard refuses localhost; host name shown in UI footer.
 - [x] **Row Counts Match:** Remote DB matches Milestone II counts 100% across all 9,628 properties and 11 tables.

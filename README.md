@@ -40,9 +40,56 @@ This repository contains the complete implementation for **Milestone I** (Databa
    - [`milestone2/deliverables/restore_check.md`](milestone2/deliverables/restore_check.md): Side-by-side row count comparison and Arabic character round-trip verification.
    - [`milestone2/README.md`](milestone2/README.md): Ethical rate-limiting details, design trade-offs, and Definition of Done checklist.
 
+### Milestone III Deliverables (Folder: `milestone3/`)
+1. **Client Application Layer & Executables (Deliverable 1)**:
+   - Responsive web application built with Flask, Tailwind CSS, Chart.js, and PyMySQL connecting to a remote MySQL database and implementing all 10 core analytics functionalities (F01–F10).
+   - One-click launcher executables: [`milestone3/run.bat`](milestone3/run.bat) (Windows) and [`milestone3/run.sh`](milestone3/run.sh) (Linux/macOS), documented in [`milestone3/deliverables/executable/README.md`](milestone3/deliverables/executable/README.md).
+2. **Latest Remote-Portable Database Dump (Deliverable 2)**:
+   - [`milestone3/deliverables/resale_properties_dump_final.sql`](milestone3/deliverables/resale_properties_dump_final.sql): Pure UTF-8 database dump (6.37 MB) stripped of `DEFINER` clauses for remote host portability, verified with 100% table row count match across all 9,628 properties in [`milestone3/deliverables/restore_check.md`](milestone3/deliverables/restore_check.md).
+3. **Live Demo Script & Audit Verification (Deliverable 3)**:
+   - [`milestone3/deliverables/demo/DEMO.md`](milestone3/deliverables/demo/DEMO.md): 5-to-8 minute live demonstration script with exact inputs, timing, and fallback procedures.
+   - [`milestone3/tools/verify_remote.py`](milestone3/tools/verify_remote.py): Remote database connectivity, row-count parity, and latency verification tool.
+   - [`milestone3/deliverables/demo/screenshots/`](milestone3/deliverables/demo/screenshots/): Full visual verification gallery for all application views.
+
 ---
 
-## 2. Database Summary & Verified Manifest
+## 2. Visual Interface & Application Screenshots Gallery
+
+Below are live screenshots of the application layer running against the database:
+
+### Executive Analytics Dashboard
+![Executive Analytics Dashboard](milestone3/deliverables/demo/screenshots/00_dashboard.png)
+
+### F01: User Registration & Focus Areas
+![F01 User Registration](milestone3/deliverables/demo/screenshots/01_f01_registration.png)
+
+### F02 & F03: Project Community Reviews
+![F02 & F03 Reviews](milestone3/deliverables/demo/screenshots/02_f02_f03_reviews.png)
+
+### F04: Top 10 Projects by Property Type
+![F04 Top 10 Projects](milestone3/deliverables/demo/screenshots/03_f04_top_projects.png)
+
+### F05: Development Deep Dive & Unit Pricing Breakdown
+![F05 Development Deep Dive](milestone3/deliverables/demo/screenshots/04_f05_dev_deep_dive.png)
+
+### F06: Area Hierarchy & Listings (Recursive CTE)
+![F06 Area Hierarchy](milestone3/deliverables/demo/screenshots/05_f06_area_properties.png)
+
+### F07: Multi-Amenity Filter (Relational Division)
+![F07 Amenities Filter](milestone3/deliverables/demo/screenshots/06_f07_amenities_filter.png)
+
+### F08: Top 5 Developers by Resale Inventory
+![F08 Top 5 Developers](milestone3/deliverables/demo/screenshots/07_f08_top_developers.png)
+
+### F09: Area × Type × Year Multi-Dimensional Matrix
+![F09 Area Type Year Matrix](milestone3/deliverables/demo/screenshots/08_f09_matrix_slicing.png)
+
+### F10: Area & Development Benchmark Averages & CSV Export
+![F10 Benchmark Averages](milestone3/deliverables/demo/screenshots/09_f10_benchmark_averages.png)
+
+---
+
+## 3. Database Summary & Verified Manifest
 
 Every table in the database has been exported and verified against [`milestone2/deliverables/csv/_manifest.csv`](milestone2/deliverables/csv/_manifest.csv):
 
@@ -62,7 +109,7 @@ Every table in the database has been exported and verified against [`milestone2/
 
 ---
 
-## 3. Key Engineering Highlights & Fixes
+## 4. Key Engineering Highlights & Fixes
 
 1. **Entire Website Crawled:** Crawled all **9,690 opportunity URLs** discovered on AqarExit. 9,628 pages were successfully downloaded into `milestone2/data/raw/`, and 62 dead/expired links (HTTP 404) were logged cleanly. **Zero pending items remain.**
 2. **Pure UTF-8 Database Dump:** Re-created using `mysqldump ... --result-file=milestone2/deliverables/resale_properties_dump.sql` (no PowerShell `>` redirection), eliminating UTF-16 LE issues and preserving all Arabic characters without mojibake.
@@ -72,7 +119,7 @@ Every table in the database has been exported and verified against [`milestone2/
 
 ---
 
-## 4. Reproduction Instructions
+## 5. Reproduction Instructions
 
 To reproduce the entire data engineering pipeline from scratch, execute:
 
@@ -108,7 +155,7 @@ python -m unittest milestone2/parsing/tests/test_parsers.py
 
 ---
 
-## 5. Definition of Done Checklist
+## 6. Definition of Done Checklist
 
 - [x] **Frontier & Full Scope:** All 9,690 listings discovered; 9,628 downloaded; 0 pending in `crawl_state.sqlite`.
 - [x] **Database Dump:** Pure UTF-8 dump generated via native `--result-file` (no UTF-16, no PowerShell `>` redirection).
