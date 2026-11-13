@@ -5,22 +5,22 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header & Filter -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800">
-        <div class="flex items-center space-x-2 mb-4">
-            <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F09</span>
-            <h1 class="text-2xl font-bold text-white tracking-tight">Properties by Area, Type & Contract Year</h1>
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200">
+        <div class="flex items-center space-x-2.5 mb-4">
+            <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200">F09</span>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Properties by Area, Type & Contract Year</h1>
         </div>
-        <p class="text-gray-400 text-sm mb-6">
+        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
             Multi-dimensional summary aggregating properties across geographic areas (with descendant expansion), unit classifications, and contract inception years.
         </p>
 
         <!-- Filter Form -->
-        <form method="GET" action="{{ url_for('f09_area_type_year') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form method="GET" action="{{ url_for('f09_area_type_year') }}" class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <!-- Area -->
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Geographic Area</label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Geographic Area</label>
                 <select name="area_id" onchange="this.form.submit()"
-                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm font-semibold focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                     {% for loc in locations %}
                         <option value="{{ loc.location_id }}" {% if loc.location_id == selected_area_id %}selected{% endif %}>
                             {{ loc.name }} {% if loc.name_ar %}({{ loc.name_ar }}){% endif %}
@@ -31,9 +31,9 @@
 
             <!-- Property Type -->
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Property Type (Optional)</label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Property Type (Optional)</label>
                 <select name="type_id" onchange="this.form.submit()"
-                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm font-semibold focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                     <option value="">-- All Property Types --</option>
                     {% for pt in property_types %}
                         <option value="{{ pt.property_type_id }}" {% if pt.property_type_id == selected_type_id %}selected{% endif %}>
@@ -45,9 +45,9 @@
 
             <!-- Contract Year -->
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Contract Year (Optional)</label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Contract Year (Optional)</label>
                 <select name="year" onchange="this.form.submit()"
-                    class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm font-semibold focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                     <option value="">-- All Contract Years --</option>
                     {% for yr in contract_years %}
                         <option value="{{ yr }}" {% if yr == selected_year %}selected{% endif %}>
@@ -60,49 +60,49 @@
     </div>
 
     <!-- Grouped Summary Table -->
-    <div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
-        <div class="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Grouped Summary Matrix</h3>
-            <span class="text-xs text-gray-400">{{ matrix_rows|length }} group clusters found</span>
+    <div class="glass-card rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Grouped Summary Matrix</h3>
+            <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">{{ matrix_rows|length }} group clusters found</span>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+                <thead class="bg-slate-100/90 text-slate-700 uppercase font-extrabold border-b border-slate-200 tracking-wider">
                     <tr>
-                        <th class="py-3 px-4">Area / City</th>
-                        <th class="py-3 px-4">Unit Classification</th>
-                        <th class="py-3 px-4 text-center">Contract Year</th>
-                        <th class="py-3 px-4 text-right">Properties Count</th>
-                        <th class="py-3 px-4 text-right">Avg Total Price</th>
-                        <th class="py-3 px-4 text-right">Avg Price per m²</th>
-                        <th class="py-3 px-4 text-center">Drill-Down</th>
+                        <th class="py-3.5 px-4">Area / City</th>
+                        <th class="py-3.5 px-4">Unit Classification</th>
+                        <th class="py-3.5 px-4 text-center">Contract Year</th>
+                        <th class="py-3.5 px-4 text-right">Properties Count</th>
+                        <th class="py-3.5 px-4 text-right">Avg Total Price</th>
+                        <th class="py-3.5 px-4 text-right">Avg Price per m²</th>
+                        <th class="py-3.5 px-4 text-center">Drill-Down</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                <tbody class="divide-y divide-slate-100 text-slate-700">
                     {% for r in matrix_rows %}
-                        <tr class="hover:bg-gray-800/40 transition">
-                            <td class="py-3 px-4 font-bold text-white">
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-3.5 px-4 font-bold text-slate-900">
                                 {{ r.area_name }}
-                                {% if r.area_name_ar %}<span class="text-gray-500 font-arabic ml-1">({{ r.area_name_ar }})</span>{% endif %}
+                                {% if r.area_name_ar %}<span class="text-slate-400 font-arabic ml-1">({{ r.area_name_ar }})</span>{% endif %}
                             </td>
-                            <td class="py-3 px-4 text-gray-300">{{ r.property_type_name }}</td>
-                            <td class="py-3 px-4 text-center font-mono font-bold text-teal-400">{{ r.contract_year }}</td>
-                            <td class="py-3 px-4 text-right font-bold text-white">{{ r.property_count }}</td>
-                            <td class="py-3 px-4 text-right font-mono">{{ "{:,.0f}".format(r.avg_price or 0) }} EGP</td>
-                            <td class="py-3 px-4 text-right font-mono text-emerald-400 font-bold">
+                            <td class="py-3.5 px-4 text-slate-700 font-medium">{{ r.property_type_name }}</td>
+                            <td class="py-3.5 px-4 text-center font-mono font-bold text-teal-700">{{ r.contract_year }}</td>
+                            <td class="py-3.5 px-4 text-right font-extrabold text-slate-900">{{ r.property_count }}</td>
+                            <td class="py-3.5 px-4 text-right font-mono font-semibold text-slate-700">{{ "{:,.0f}".format(r.avg_price or 0) }} EGP</td>
+                            <td class="py-3.5 px-4 text-right font-mono font-bold text-emerald-700">
                                 {{ "{:,.0f}".format(r.avg_price_sqm or 0) }} EGP
                             </td>
-                            <td class="py-3 px-4 text-center">
+                            <td class="py-3.5 px-4 text-center">
                                 <a href="{{ url_for('f06_area_properties', area_id=r.location_id) }}"
-                                    class="text-teal-400 hover:underline">
+                                    class="text-teal-700 font-bold hover:underline">
                                     View Listings →
                                 </a>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="7" class="py-8 text-center text-gray-500">
+                            <td colspan="7" class="py-10 text-center text-slate-400 font-medium">
                                 No records matching this specific area/type/year combination.
                             </td>
                         </tr>

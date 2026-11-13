@@ -5,15 +5,15 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header & Controls -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
-                <div class="flex items-center space-x-2">
-                    <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F04</span>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">Top 10 Projects by Property Type</h1>
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200">F04</span>
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Top 10 Projects by Property Type</h1>
                 </div>
-                <p class="text-gray-400 text-sm mt-1">
-                    Rankings computed across three measures: <strong>Resale Inventory</strong>, <strong>Resale Amount</strong>, and <strong>Gain Over Market Value</strong>.
+                <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
+                    Rankings computed across three measures: <strong>Resale Inventory</strong>, <strong>Resale Capital</strong>, and <strong>Gain Over Market Value</strong>.
                 </p>
             </div>
 
@@ -22,7 +22,7 @@
                 <!-- Property Type Dropdown -->
                 <div>
                     <select name="type_id" onchange="this.form.submit()"
-                        class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                        class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm font-semibold focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
                         {% for pt in property_types %}
                             <option value="{{ pt.property_type_id }}" {% if pt.property_type_id == selected_type_id %}selected{% endif %}>
                                 {{ pt.name }} {% if pt.name_ar %}({{ pt.name_ar }}){% endif %}
@@ -32,31 +32,31 @@
                 </div>
 
                 <!-- Minimum Listings Threshold -->
-                <div class="flex items-center space-x-2 bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700">
-                    <span class="text-xs text-gray-400">Min Listings:</span>
+                <div class="flex items-center space-x-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-300">
+                    <span class="text-xs text-slate-600 font-bold">Min Listings:</span>
                     <input type="number" name="min_listings" value="{{ min_listings }}" min="1" max="50" onchange="this.form.submit()"
-                        class="w-12 bg-transparent text-white text-xs font-bold focus:outline-none text-center">
+                        class="w-12 bg-transparent text-slate-900 text-xs font-extrabold focus:outline-none text-center">
                 </div>
 
                 <!-- Outlier Toggle -->
-                <label class="flex items-center space-x-2 bg-gray-900 px-3 py-2 rounded-xl border border-gray-700 cursor-pointer text-xs text-gray-300">
+                <label class="flex items-center space-x-2 bg-slate-50 px-3.5 py-2.5 rounded-xl border border-slate-300 cursor-pointer text-xs text-slate-700 font-semibold">
                     <input type="checkbox" name="exclude_outliers" value="1" {% if exclude_outliers %}checked{% endif %} onchange="this.form.submit()"
-                        class="rounded bg-gray-800 border-gray-700 text-teal-500 focus:ring-teal-500">
-                    <span>Exclude Outliers (1k-300k EGP/m²)</span>
+                        class="rounded bg-white border-slate-300 text-teal-600 focus:ring-teal-500">
+                    <span>Exclude Outliers (1k–300k EGP/m²)</span>
                 </label>
             </form>
         </div>
 
         {% if excluded_count > 0 %}
-            <div class="mt-4 pt-3 border-t border-gray-800 text-xs text-amber-400 flex items-center space-x-1">
-                <span>ℹ Note: <strong>{{ excluded_count }}</strong> properties of this type without a development project were excluded.</span>
+            <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-amber-700 font-semibold flex items-center space-x-1.5">
+                <span>ℹ Note: <strong>{{ excluded_count }}</strong> properties of this type without a development association were excluded.</span>
             </div>
         {% endif %}
     </div>
 
     <!-- Chart Visualization -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800">
-        <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Top 10 Resale Inventory Comparison (Chart)</h3>
+    <div class="glass-card p-6 sm:p-7 rounded-3xl border border-slate-200">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Top 10 Resale Inventory Comparison (Chart)</h3>
         <div class="h-64">
             <canvas id="f04Chart"></canvas>
         </div>
@@ -64,17 +64,17 @@
 
     <!-- Tabs for the Three Measures -->
     <div class="space-y-4">
-        <div class="border-b border-gray-800 flex space-x-4">
+        <div class="border-b border-slate-200 flex space-x-4">
             <button onclick="showTab('tab-inventory')" id="btn-inventory"
-                class="pb-3 text-sm font-bold border-b-2 border-teal-400 text-teal-400 transition">
+                class="pb-3 text-sm font-bold border-b-2 border-teal-600 text-teal-700 transition">
                 1. By Resale Inventory (Listings)
             </button>
             <button onclick="showTab('tab-amount')" id="btn-amount"
-                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">
+                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition">
                 2. By Resale Capital (EGP)
             </button>
             <button onclick="showTab('tab-gain')" id="btn-gain"
-                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">
+                class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition">
                 3. By Gain Over Market Value
             </button>
         </div>
@@ -112,9 +112,9 @@
         ['inventory', 'amount', 'gain'].forEach(name => {
             const btn = document.getElementById('btn-' + name);
             if ('tab-' + name === tabId) {
-                btn.className = 'pb-3 text-sm font-bold border-b-2 border-teal-400 text-teal-400 transition';
+                btn.className = 'pb-3 text-sm font-bold border-b-2 border-teal-600 text-teal-700 transition';
             } else {
-                btn.className = 'pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition';
+                btn.className = 'pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition';
             }
         });
     }
@@ -131,10 +131,10 @@
             datasets: [{
                 label: 'Resale Units Available',
                 data: data,
-                backgroundColor: 'rgba(20, 184, 166, 0.7)',
-                borderColor: '#14b8a6',
+                backgroundColor: 'rgba(13, 148, 136, 0.85)',
+                borderColor: '#0d9488',
                 borderWidth: 1,
-                borderRadius: 6
+                borderRadius: 8
             }]
         },
         options: {
@@ -142,8 +142,8 @@
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
-                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                x: { ticks: { color: '#475569', font: { size: 11, weight: 'bold' } }, grid: { display: false } },
+                y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(226, 232, 240, 0.8)' } }
             }
         }
     });

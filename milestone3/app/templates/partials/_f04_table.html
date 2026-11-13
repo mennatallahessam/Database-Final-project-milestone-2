@@ -1,47 +1,47 @@
-<div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
+<div class="glass-card rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
     <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
-            <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+            <thead class="bg-slate-100/90 text-slate-700 uppercase font-extrabold border-b border-slate-200 tracking-wider">
                 <tr>
-                    <th class="py-3 px-4">#</th>
-                    <th class="py-3 px-4">Development Project</th>
-                    <th class="py-3 px-4">Developer</th>
-                    <th class="py-3 px-4 text-right {% if highlight == 'inventory' %}text-teal-400{% endif %}">Inventory</th>
-                    <th class="py-3 px-4 text-right {% if highlight == 'amount' %}text-teal-400{% endif %}">Resale Capital</th>
-                    <th class="py-3 px-4 text-right">Avg Price/m²</th>
-                    <th class="py-3 px-4 text-right {% if highlight == 'gain' %}text-teal-400{% endif %}">Avg Gain</th>
-                    <th class="py-3 px-4 text-right">Total Gain</th>
+                    <th class="py-3.5 px-4">#</th>
+                    <th class="py-3.5 px-4">Development Project</th>
+                    <th class="py-3.5 px-4">Developer</th>
+                    <th class="py-3.5 px-4 text-right {% if highlight == 'inventory' %}text-teal-700 font-black{% endif %}">Inventory</th>
+                    <th class="py-3.5 px-4 text-right {% if highlight == 'amount' %}text-teal-700 font-black{% endif %}">Resale Capital</th>
+                    <th class="py-3.5 px-4 text-right">Avg Price/m²</th>
+                    <th class="py-3.5 px-4 text-right {% if highlight == 'gain' %}text-teal-700 font-black{% endif %}">Avg Gain</th>
+                    <th class="py-3.5 px-4 text-right">Total Gain</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-800/60 text-gray-300">
+            <tbody class="divide-y divide-slate-100 text-slate-700">
                 {% for r in rows %}
-                    <tr class="hover:bg-gray-800/40 transition">
-                        <td class="py-3 px-4 font-mono text-gray-500">{{ loop.index }}</td>
-                        <td class="py-3 px-4 font-bold text-white">
-                            <a href="{{ url_for('f05_dev_location', dev_id=r.development_id) }}" class="hover:text-teal-400 transition">
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 font-mono font-bold text-slate-400">{{ loop.index }}</td>
+                        <td class="py-3.5 px-4 font-bold text-slate-900">
+                            <a href="{{ url_for('f05_dev_location', dev_id=r.development_id) }}" class="hover:text-teal-700 transition">
                                 {{ r.development_name }}
                             </a>
                         </td>
-                        <td class="py-3 px-4 text-gray-400">{{ r.developer_name or 'N/A' }}</td>
-                        <td class="py-3 px-4 text-right font-bold {% if highlight == 'inventory' %}text-teal-400{% else %}text-white{% endif %}">
+                        <td class="py-3.5 px-4 text-slate-500 font-medium">{{ r.developer_name or 'N/A' }}</td>
+                        <td class="py-3.5 px-4 text-right font-extrabold {% if highlight == 'inventory' %}text-teal-700{% else %}text-slate-800{% endif %}">
                             {{ r.resale_inventory }} units
                         </td>
-                        <td class="py-3 px-4 text-right font-mono {% if highlight == 'amount' %}text-teal-400 font-bold{% endif %}">
+                        <td class="py-3.5 px-4 text-right font-mono font-semibold {% if highlight == 'amount' %}text-teal-700 font-extrabold{% endif %}">
                             {{ "{:,.0f}".format(r.total_resale_amount or 0) }} EGP
                         </td>
-                        <td class="py-3 px-4 text-right font-mono">
+                        <td class="py-3.5 px-4 text-right font-mono text-slate-600 font-medium">
                             {{ "{:,.0f}".format(r.avg_price_sqm or 0) }} EGP
                         </td>
-                        <td class="py-3 px-4 text-right font-mono {% if highlight == 'gain' %}text-teal-400 font-bold{% else %}text-emerald-400{% endif %}">
+                        <td class="py-3.5 px-4 text-right font-mono font-bold {% if highlight == 'gain' %}text-teal-700{% else %}text-emerald-600{% endif %}">
                             +{{ "{:,.0f}".format(r.avg_gain or 0) }} EGP
                         </td>
-                        <td class="py-3 px-4 text-right font-mono text-emerald-400">
+                        <td class="py-3.5 px-4 text-right font-mono font-bold text-emerald-600">
                             +{{ "{:,.0f}".format(r.total_gain or 0) }} EGP
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="8" class="text-center py-8 text-gray-500">
+                        <td colspan="8" class="text-center py-10 text-slate-400 font-medium">
                             No projects match the selected threshold criteria.
                         </td>
                     </tr>

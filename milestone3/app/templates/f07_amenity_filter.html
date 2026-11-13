@@ -5,22 +5,22 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Filter Card -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800">
-        <div class="flex items-center space-x-2 mb-4">
-            <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F07</span>
-            <h1 class="text-2xl font-bold text-white tracking-tight">Multi-Amenity & Price Range Search</h1>
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200">
+        <div class="flex items-center space-x-2.5 mb-4">
+            <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200">F07</span>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Multi-Amenity & Price Range Search</h1>
         </div>
-        <p class="text-gray-400 text-sm mb-6">
+        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
             Filters properties by geographic area, price bounds, and selected amenities enforcing strict <strong>relational division</strong> (the property must possess <em>all</em> selected amenities) with a toggle for <em>any</em>.
         </p>
 
         <!-- Search Form -->
         <form method="GET" action="{{ url_for('f07_amenity_filter') }}" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <!-- Area -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Geographic Area</label>
-                    <select name="area_id" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Geographic Area</label>
+                    <select name="area_id" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm font-semibold focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
                         {% for loc in locations %}
                             <option value="{{ loc.location_id }}" {% if loc.location_id == selected_area_id %}selected{% endif %}>
                                 {{ loc.name }} {% if loc.name_ar %}({{ loc.name_ar }}){% endif %}
@@ -31,47 +31,47 @@
 
                 <!-- Min Price -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Min Price (EGP)</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Min Price (EGP)</label>
                     <input type="number" name="min_price" value="{{ min_price or '' }}" placeholder="e.g. 1500000"
-                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
                 </div>
 
                 <!-- Max Price -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Max Price (EGP)</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Max Price (EGP)</label>
                     <input type="number" name="max_price" value="{{ max_price or '' }}" placeholder="e.g. 8000000"
-                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500">
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
                 </div>
             </div>
 
             <!-- Amenities Checkboxes -->
             <div>
                 <div class="flex items-center justify-between mb-2">
-                    <label class="text-xs font-semibold text-gray-400 uppercase">Select Amenities</label>
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Select Amenities</label>
                     
                     <!-- ALL vs ANY semantics toggle -->
                     <div class="flex items-center space-x-3 text-xs">
-                        <span class="text-gray-400">Match Semantics:</span>
-                        <label class="inline-flex items-center space-x-1 cursor-pointer">
+                        <span class="text-slate-500 font-bold">Match Semantics:</span>
+                        <label class="inline-flex items-center space-x-1.5 cursor-pointer">
                             <input type="radio" name="match_mode" value="ALL" {% if match_mode == 'ALL' %}checked{% endif %}
-                                class="text-teal-500 focus:ring-teal-500">
-                            <span class="text-teal-400 font-bold">ALL Selected (Relational Division)</span>
+                                class="text-teal-600 focus:ring-teal-500">
+                            <span class="text-teal-800 font-extrabold bg-teal-50 px-2 py-0.5 rounded border border-teal-200">ALL Selected (Relational Division)</span>
                         </label>
-                        <label class="inline-flex items-center space-x-1 cursor-pointer">
+                        <label class="inline-flex items-center space-x-1.5 cursor-pointer">
                             <input type="radio" name="match_mode" value="ANY" {% if match_mode == 'ANY' %}checked{% endif %}
-                                class="text-teal-500 focus:ring-teal-500">
-                            <span class="text-gray-300">ANY Selected</span>
+                                class="text-teal-600 focus:ring-teal-500">
+                            <span class="text-slate-600 font-bold">ANY Selected</span>
                         </label>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-4 bg-gray-900/60 rounded-xl border border-gray-800">
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     {% for am in amenities %}
-                        <label class="flex items-center space-x-2 text-xs text-gray-300 hover:text-white cursor-pointer">
+                        <label class="flex items-center space-x-2 text-xs text-slate-700 hover:text-slate-900 cursor-pointer p-1 rounded-lg hover:bg-white transition">
                             <input type="checkbox" name="amenities" value="{{ am.amenity_id }}"
                                 {% if am.amenity_id in selected_amenities %}checked{% endif %}
-                                class="rounded bg-gray-800 border-gray-700 text-teal-500 focus:ring-teal-500">
-                            <span>{{ am.name }}</span>
+                                class="rounded bg-white border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <span class="font-medium">{{ am.name }}</span>
                         </label>
                     {% endfor %}
                 </div>
@@ -79,7 +79,7 @@
 
             <div class="flex justify-end pt-2">
                 <button type="submit"
-                    class="px-6 py-2.5 rounded-xl bg-teal-500 text-black font-semibold text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/20">
+                    class="px-7 py-2.5 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition shadow-sm shadow-teal-600/20">
                     Search Properties
                 </button>
             </div>
@@ -88,52 +88,52 @@
 
     <!-- Results Table -->
     {% if filter_results %}
-    <div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
-        <div class="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+    <div class="glass-card rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
                 Matching Opportunities ({{ filter_results.total_matches }} found)
             </h3>
-            <span class="text-xs text-teal-400 font-medium">Mode: {{ filter_results.match_mode }}</span>
+            <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">Mode: {{ filter_results.match_mode }}</span>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+                <thead class="bg-slate-100/90 text-slate-700 uppercase font-extrabold border-b border-slate-200 tracking-wider">
                     <tr>
-                        <th class="py-3 px-4">Listing</th>
-                        <th class="py-3 px-4">Type</th>
-                        <th class="py-3 px-4">Development</th>
-                        <th class="py-3 px-4 text-right">Area m²</th>
-                        <th class="py-3 px-4 text-right">Price</th>
-                        <th class="py-3 px-4">Amenities Matching</th>
-                        <th class="py-3 px-4 text-center">Source</th>
+                        <th class="py-3.5 px-4">Listing</th>
+                        <th class="py-3.5 px-4">Type</th>
+                        <th class="py-3.5 px-4">Development</th>
+                        <th class="py-3.5 px-4 text-right">Area m²</th>
+                        <th class="py-3.5 px-4 text-right">Price</th>
+                        <th class="py-3.5 px-4">Amenities Matching</th>
+                        <th class="py-3.5 px-4 text-center">Source</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                <tbody class="divide-y divide-slate-100 text-slate-700">
                     {% for p in filter_results.properties %}
-                        <tr class="hover:bg-gray-800/40 transition">
-                            <td class="py-3 px-4">
-                                <p class="font-bold text-white max-w-xs truncate">{{ p.title or 'Listing' }}</p>
-                                <p class="text-[10px] text-gray-500 font-mono">{{ p.source_listing_id }}</p>
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-3.5 px-4">
+                                <p class="font-bold text-slate-900 max-w-xs truncate">{{ p.title or 'Listing' }}</p>
+                                <p class="text-[10px] text-slate-400 font-mono">{{ p.source_listing_id }}</p>
                             </td>
-                            <td class="py-3 px-4 text-gray-300">{{ p.property_type_name }}</td>
-                            <td class="py-3 px-4 text-gray-300">{{ p.development_name or 'Independent' }}</td>
-                            <td class="py-3 px-4 text-right font-mono">{{ p.area_sqm }} m²</td>
-                            <td class="py-3 px-4 text-right font-mono font-bold text-teal-400">
+                            <td class="py-3.5 px-4 text-slate-700 font-medium">{{ p.property_type_name }}</td>
+                            <td class="py-3.5 px-4 text-slate-700 font-medium">{{ p.development_name or 'Independent' }}</td>
+                            <td class="py-3.5 px-4 text-right font-mono font-semibold text-slate-800">{{ p.area_sqm }} m²</td>
+                            <td class="py-3.5 px-4 text-right font-mono font-extrabold text-teal-700">
                                 {{ "{:,.0f}".format(p.price) }} EGP
                             </td>
-                            <td class="py-3 px-4 text-xs text-gray-400 max-w-xs truncate">
+                            <td class="py-3.5 px-4 text-xs text-slate-500 font-medium max-w-xs truncate">
                                 {{ p.amenities_list or 'None specified' }}
                             </td>
-                            <td class="py-3 px-4 text-center">
-                                <a href="{{ p.source_url }}" target="_blank" class="text-teal-400 hover:underline">
+                            <td class="py-3.5 px-4 text-center">
+                                <a href="{{ p.source_url }}" target="_blank" class="text-teal-700 font-bold hover:underline">
                                     Link ↗
                                 </a>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="7" class="py-8 text-center text-gray-500">
+                            <td colspan="7" class="py-10 text-center text-slate-400 font-medium">
                                 No properties matched all selected criteria. Try adjusting the price bounds or amenity combination.
                             </td>
                         </tr>

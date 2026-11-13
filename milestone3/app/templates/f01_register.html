@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto space-y-8">
-    <div class="glass-card p-6 sm:p-8 rounded-2xl border border-gray-800">
-        <div class="flex items-center space-x-3 mb-6">
-            <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F01</span>
-            <h1 class="text-2xl font-bold text-white tracking-tight">Register User Account</h1>
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200">
+        <div class="flex items-center space-x-3 mb-4">
+            <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200">F01</span>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Register User Account</h1>
         </div>
-        <p class="text-gray-400 text-sm mb-6">
-            Creates a validated user record in <code class="text-teal-400">app_user</code> and links multiple geographic areas in <code class="text-teal-400">user_focus_area</code> in a <strong>single atomic transaction</strong>. User age is computed dynamically via view <code class="text-teal-400">v_user_profile</code>.
+        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+            Creates a validated user record in <code class="text-teal-700 font-bold bg-teal-50 px-1.5 py-0.5 rounded">app_user</code> and links multiple geographic areas in <code class="text-teal-700 font-bold bg-teal-50 px-1.5 py-0.5 rounded">user_focus_area</code> in a <strong>single atomic transaction</strong>. User age is computed dynamically via view <code class="text-teal-700 font-bold bg-teal-50 px-1.5 py-0.5 rounded">v_user_profile</code>.
         </p>
 
         <!-- Registration Form -->
@@ -18,24 +18,24 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Username -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Username *</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Username *</label>
                     <input type="text" name="username" required value="{{ request.form.get('username', '') }}"
                         placeholder="e.g. karim_hassan"
-                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 transition">
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                 </div>
 
                 <!-- Email -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email Address *</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address *</label>
                     <input type="email" name="email" required value="{{ request.form.get('email', '') }}"
                         placeholder="e.g. karim@example.com"
-                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 transition">
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                 </div>
 
                 <!-- Gender -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Gender</label>
-                    <select name="gender" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 transition">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Gender</label>
+                    <select name="gender" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
                         <option value="">-- Select Gender --</option>
                         <option value="male" {% if request.form.get('gender') == 'male' %}selected{% endif %}>Male</option>
                         <option value="female" {% if request.form.get('gender') == 'female' %}selected{% endif %}>Female</option>
@@ -46,33 +46,33 @@
 
                 <!-- Birthdate -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Birthdate *</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Birthdate *</label>
                     <input type="date" name="birthdate" id="birthdate" required value="{{ request.form.get('birthdate', '') }}"
-                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 transition">
-                    <p class="text-xs text-gray-500 mt-1" id="age_preview">Age will be dynamically derived via MySQL view <code>v_user_profile</code>.</p>
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
+                    <p class="text-xs text-slate-500 mt-1.5" id="age_preview">Age will be dynamically derived via MySQL view <code>v_user_profile</code>.</p>
                 </div>
             </div>
 
             <!-- Multi-Select Focus Areas -->
             <div>
-                <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                     Main Areas of Focus * (Select one or more)
                 </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-56 overflow-y-auto p-3 bg-gray-900/60 rounded-xl border border-gray-800">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-56 overflow-y-auto p-3 bg-slate-50 rounded-2xl border border-slate-200">
                     {% for loc in locations %}
-                        <label class="flex items-center space-x-2 text-xs text-gray-300 hover:text-white cursor-pointer p-1 rounded hover:bg-gray-800">
+                        <label class="flex items-center space-x-2 text-xs text-slate-700 hover:text-slate-900 cursor-pointer p-1.5 rounded-lg hover:bg-white hover:shadow-xs transition">
                             <input type="checkbox" name="focus_areas" value="{{ loc.location_id }}"
-                                class="rounded bg-gray-800 border-gray-700 text-teal-500 focus:ring-teal-500">
-                            <span class="truncate">{{ loc.name }} {% if loc.name_ar %}<span class="text-gray-500 font-arabic">({{ loc.name_ar }})</span>{% endif %}</span>
+                                class="rounded bg-white border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <span class="truncate">{{ loc.name }} {% if loc.name_ar %}<span class="text-slate-500 font-arabic">({{ loc.name_ar }})</span>{% endif %}</span>
                         </label>
                     {% endfor %}
                 </div>
             </div>
 
-            <div class="pt-4 flex items-center justify-between border-t border-gray-800">
-                <span class="text-xs text-gray-500">* Required fields</span>
+            <div class="pt-4 flex items-center justify-between border-t border-slate-200">
+                <span class="text-xs text-slate-500 font-medium">* Required fields</span>
                 <button type="submit"
-                    class="px-6 py-2.5 rounded-xl bg-teal-500 text-black font-semibold text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/20">
+                    class="px-7 py-2.5 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition shadow-md shadow-teal-600/20">
                     Complete Registration
                 </button>
             </div>
@@ -80,15 +80,15 @@
     </div>
 
     <!-- Quick Sign In by Username / Email for Existing Users -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="glass-card p-6 rounded-3xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-            <h3 class="text-base font-bold text-white">Already Registered?</h3>
-            <p class="text-xs text-gray-400 mt-0.5">Sign in with your username or email to author reviews (F02) or inspect your profile.</p>
+            <h3 class="text-base font-bold text-slate-900">Already Registered?</h3>
+            <p class="text-xs text-slate-600 mt-0.5">Sign in with your username or email to author reviews (F02) or inspect your profile.</p>
         </div>
         <form method="POST" action="{{ url_for('login') }}" class="flex items-center space-x-2 w-full sm:w-auto">
             <input type="text" name="identifier" required placeholder="Username or email"
-                class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-teal-500 transition">
-            <button type="submit" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-200 text-xs font-semibold hover:bg-gray-700 transition">
+                class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-slate-900 text-xs focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition">
+            <button type="submit" class="px-5 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold hover:bg-slate-900 transition">
                 Sign In
             </button>
         </form>
@@ -96,38 +96,38 @@
 
     <!-- Display Registered / Current User Details if Available -->
     {% if current_user %}
-    <div class="glass-card p-6 rounded-2xl border border-emerald-500/30 bg-emerald-950/10">
-        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
-            <div class="flex items-center space-x-2">
-                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-                <h3 class="text-lg font-bold text-white">Active User Profile: {{ current_user.username }}</h3>
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-emerald-300 bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/40 shadow-xs">
+        <div class="flex items-center justify-between border-b border-emerald-200/60 pb-4 mb-4">
+            <div class="flex items-center space-x-2.5">
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                <h3 class="text-lg font-bold text-slate-900">Active User Profile: {{ current_user.username }}</h3>
             </div>
-            <span class="text-xs text-gray-400">User ID: #{{ current_user.user_id }}</span>
+            <span class="text-xs font-mono font-bold text-emerald-800 bg-emerald-100/80 px-2.5 py-1 rounded-lg">User ID: #{{ current_user.user_id }}</span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <div>
-                <p class="text-xs text-gray-500 uppercase font-semibold">Email</p>
-                <p class="text-white mt-1">{{ current_user.email }}</p>
+                <p class="text-xs text-slate-500 uppercase font-bold">Email</p>
+                <p class="text-slate-900 font-semibold mt-1">{{ current_user.email }}</p>
             </div>
             <div>
-                <p class="text-xs text-gray-500 uppercase font-semibold">Gender</p>
-                <p class="text-white mt-1 capitalize">{{ current_user.gender or 'n/a' }}</p>
+                <p class="text-xs text-slate-500 uppercase font-bold">Gender</p>
+                <p class="text-slate-900 font-semibold mt-1 capitalize">{{ current_user.gender or 'n/a' }}</p>
             </div>
             <div>
-                <p class="text-xs text-gray-500 uppercase font-semibold">Birthdate</p>
-                <p class="text-white mt-1">{{ current_user.birthdate }}</p>
+                <p class="text-xs text-slate-500 uppercase font-bold">Birthdate</p>
+                <p class="text-slate-900 font-semibold mt-1">{{ current_user.birthdate }}</p>
             </div>
             <div>
-                <p class="text-xs text-gray-500 uppercase font-semibold">Derived Age (v_user_profile)</p>
-                <p class="text-emerald-400 font-bold mt-1">{{ current_user.age }} years old</p>
+                <p class="text-xs text-slate-500 uppercase font-bold">Derived Age (v_user_profile)</p>
+                <p class="text-emerald-700 font-extrabold mt-1">{{ current_user.age }} years old</p>
             </div>
         </div>
-        <div class="mt-4 pt-4 border-t border-gray-800">
-            <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Selected Focus Areas</p>
+        <div class="mt-4 pt-4 border-t border-emerald-200/60">
+            <p class="text-xs text-slate-500 uppercase font-bold mb-2">Selected Focus Areas</p>
             <div class="flex flex-wrap gap-2">
                 {% for fa in current_user.focus_areas %}
-                    <span class="px-2.5 py-1 rounded-lg text-xs bg-gray-800 border border-gray-700 text-gray-300">
-                        {{ fa.name }} {% if fa.name_ar %}<span class="text-gray-500 font-arabic">({{ fa.name_ar }})</span>{% endif %}
+                    <span class="px-3 py-1 rounded-lg text-xs bg-white border border-slate-200 text-slate-700 font-medium shadow-2xs">
+                        {{ fa.name }} {% if fa.name_ar %}<span class="text-slate-400 font-arabic">({{ fa.name_ar }})</span>{% endif %}
                     </span>
                 {% endfor %}
             </div>

@@ -5,13 +5,13 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header with Search -->
-    <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <div class="flex items-center space-x-2">
-                <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">F05</span>
-                <h1 class="text-2xl font-bold text-white tracking-tight">Development Location & Pricing Profile</h1>
+            <div class="flex items-center space-x-2.5">
+                <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200">F05</span>
+                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Development Location & Pricing Profile</h1>
             </div>
-            <p class="text-gray-400 text-sm mt-1">
+            <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
                 Inspects development geographic hierarchy, real coordinates status, and price per sqm breakdown across all unit types.
             </p>
         </div>
@@ -19,8 +19,8 @@
         <!-- Search Form -->
         <form method="GET" action="{{ url_for('f05_dev_location') }}" class="flex items-center space-x-2">
             <input type="text" name="search" value="{{ search_query }}" placeholder="Search development name..."
-                class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-teal-500 w-64">
-            <button type="submit" class="px-4 py-2 rounded-xl bg-teal-500 text-black font-semibold text-sm hover:bg-teal-400 transition">
+                class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 w-64 transition">
+            <button type="submit" class="px-5 py-2 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition shadow-sm">
                 Search
             </button>
         </form>
@@ -28,14 +28,14 @@
 
     <!-- Search Results if query submitted -->
     {% if dev_search_results %}
-    <div class="glass-card p-4 rounded-xl border border-gray-800">
-        <p class="text-xs text-gray-400 mb-3 font-semibold uppercase">Search Results:</p>
+    <div class="glass-card p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <p class="text-xs text-slate-500 mb-3 font-bold uppercase tracking-wider">Search Results:</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {% for dev in dev_search_results %}
                 <a href="{{ url_for('f05_dev_location', dev_id=dev.development_id) }}"
-                    class="p-3 rounded-lg bg-gray-900/60 hover:bg-gray-800 border border-gray-800 hover:border-teal-500/50 transition">
-                    <p class="text-sm font-bold text-white">{{ dev.name }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ dev.developer_name or 'Independent' }} • {{ dev.location_name or 'Egypt' }}</p>
+                    class="p-3.5 rounded-xl bg-slate-50 hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 transition">
+                    <p class="text-sm font-bold text-slate-900">{{ dev.name }}</p>
+                    <p class="text-xs text-slate-500 mt-1 font-medium">{{ dev.developer_name or 'Independent' }} • {{ dev.location_name or 'Egypt' }}</p>
                 </a>
             {% endfor %}
         </div>
@@ -45,46 +45,46 @@
     {% if dev_data %}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Development Geographic & Developer Card -->
-        <div class="glass-card p-6 rounded-2xl border border-gray-800 space-y-6">
+        <div class="glass-card p-6 sm:p-7 rounded-3xl border border-slate-200 space-y-6">
             <div>
-                <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Project Identity</span>
-                <h2 class="text-2xl font-bold text-white mt-1">{{ dev_data.development.development_name }}</h2>
-                <p class="text-sm text-gray-400 mt-1">Developer: <strong class="text-white">{{ dev_data.development.developer_name or 'N/A' }}</strong></p>
+                <span class="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200 uppercase tracking-wider">Project Identity</span>
+                <h2 class="text-2xl font-extrabold text-slate-900 mt-2">{{ dev_data.development.development_name }}</h2>
+                <p class="text-sm text-slate-600 mt-1">Developer: <strong class="text-slate-900">{{ dev_data.development.developer_name or 'N/A' }}</strong></p>
             </div>
 
             <!-- Geographic Path -->
             <div>
-                <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Location Hierarchy Path</p>
+                <p class="text-xs text-slate-500 uppercase font-bold tracking-wider mb-2">Location Hierarchy Path</p>
                 <div class="space-y-1.5 text-xs">
                     {% for p in dev_data.development.location_path %}
-                        <div class="flex items-center space-x-2 text-gray-300">
-                            <span class="text-teal-400">↳</span>
-                            <span class="font-medium">{{ p.name }}</span>
-                            <span class="text-gray-500 uppercase text-[10px]">({{ p.location_type }})</span>
+                        <div class="flex items-center space-x-2 text-slate-700">
+                            <span class="text-teal-600 font-bold">↳</span>
+                            <span class="font-bold text-slate-900">{{ p.name }}</span>
+                            <span class="text-slate-400 uppercase text-[10px] font-semibold">({{ p.location_type }})</span>
                         </div>
                     {% else %}
-                        <p class="text-gray-500">Egypt (General)</p>
+                        <p class="text-slate-500">Egypt (General)</p>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- GPS Coordinates Status (Strict Rule 5 & 8 Compliance) -->
-            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800">
-                <p class="text-xs text-gray-500 uppercase font-semibold mb-1">GPS Coordinates Status</p>
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <p class="text-xs text-slate-600 uppercase font-bold mb-1">GPS Coordinates Status</p>
                 {% if dev_data.development.latitude and dev_data.development.longitude %}
-                    <p class="text-xs text-emerald-400 font-mono">
+                    <p class="text-xs text-emerald-700 font-mono font-bold">
                         {{ dev_data.development.latitude }}, {{ dev_data.development.longitude }}
                     </p>
                     <a href="https://maps.google.com/?q={{ dev_data.development.latitude }},{{ dev_data.development.longitude }}"
-                        target="_blank" class="inline-block mt-2 text-xs text-teal-400 hover:underline">
+                        target="_blank" class="inline-block mt-2 text-xs font-bold text-teal-700 hover:underline">
                         View on Google Maps →
                     </a>
                 {% else %}
-                    <div class="flex items-center space-x-2 text-xs text-gray-400">
-                        <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                    <div class="flex items-center space-x-2 text-xs text-slate-600 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
                         <span>Coordinates not available on AqarExit listing</span>
                     </div>
-                    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">
+                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
                         Per course data integrity guidelines, coordinates are stored strictly as <code>NULL</code> rather than drawing arbitrary or fabricated map pins.
                     </p>
                 {% endif %}
@@ -93,7 +93,7 @@
             {% if dev_data.development.source_url %}
                 <div class="pt-2">
                     <a href="{{ dev_data.development.source_url }}" target="_blank"
-                        class="text-xs text-teal-400 hover:underline flex items-center space-x-1">
+                        class="text-xs font-bold text-teal-700 hover:underline flex items-center space-x-1">
                         <span>Original AqarExit Project URL</span>
                         <span>↗</span>
                     </a>
@@ -104,55 +104,55 @@
         <!-- Breakdown by Property Type Table & Chart -->
         <div class="lg:col-span-2 space-y-6">
             <!-- Chart -->
-            <div class="glass-card p-6 rounded-2xl border border-gray-800">
-                <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Price per m² by Property Type</h3>
+            <div class="glass-card p-6 sm:p-7 rounded-3xl border border-slate-200">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Price per m² by Property Type</h3>
                 <div class="h-56">
                     <canvas id="f05Chart"></canvas>
                 </div>
             </div>
 
             <!-- Table -->
-            <div class="glass-card rounded-2xl border border-gray-800 overflow-hidden">
-                <div class="p-4 border-b border-gray-800">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Unit Type Resale Breakdown</h3>
+            <div class="glass-card rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+                <div class="p-4 sm:p-5 border-b border-slate-200">
+                    <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Unit Type Resale Breakdown</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
-                        <thead class="bg-gray-900/80 text-gray-400 uppercase font-semibold border-b border-gray-800">
+                        <thead class="bg-slate-100/90 text-slate-700 uppercase font-extrabold border-b border-slate-200 tracking-wider">
                             <tr>
-                                <th class="py-3 px-4">Property Type</th>
-                                <th class="py-3 px-4 text-right">Listings</th>
-                                <th class="py-3 px-4 text-right">Avg Price/m²</th>
-                                <th class="py-3 px-4 text-right">Min Price</th>
-                                <th class="py-3 px-4 text-right">Max Price</th>
+                                <th class="py-3.5 px-4">Property Type</th>
+                                <th class="py-3.5 px-4 text-right">Listings</th>
+                                <th class="py-3.5 px-4 text-right">Avg Price/m²</th>
+                                <th class="py-3.5 px-4 text-right">Min Price</th>
+                                <th class="py-3.5 px-4 text-right">Max Price</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
                             {% for ut in dev_data.unit_types %}
-                                <tr class="hover:bg-gray-800/40 transition">
-                                    <td class="py-3 px-4 font-bold text-white">
+                                <tr class="hover:bg-slate-50/80 transition">
+                                    <td class="py-3.5 px-4 font-bold text-slate-900">
                                         {{ ut.property_type_name }}
-                                        {% if ut.property_type_ar %}<span class="text-gray-500 font-arabic ml-1">({{ ut.property_type_ar }})</span>{% endif %}
+                                        {% if ut.property_type_ar %}<span class="text-slate-400 font-arabic ml-1">({{ ut.property_type_ar }})</span>{% endif %}
                                     </td>
-                                    <td class="py-3 px-4 text-right text-teal-400 font-semibold">{{ ut.listing_count }}</td>
-                                    <td class="py-3 px-4 text-right font-mono font-bold">{{ "{:,.0f}".format(ut.avg_price_sqm or 0) }} EGP</td>
-                                    <td class="py-3 px-4 text-right font-mono text-gray-400">{{ "{:,.0f}".format(ut.min_price or 0) }} EGP</td>
-                                    <td class="py-3 px-4 text-right font-mono text-gray-400">{{ "{:,.0f}".format(ut.max_price or 0) }} EGP</td>
+                                    <td class="py-3.5 px-4 text-right text-teal-700 font-extrabold">{{ ut.listing_count }}</td>
+                                    <td class="py-3.5 px-4 text-right font-mono font-bold text-slate-900">{{ "{:,.0f}".format(ut.avg_price_sqm or 0) }} EGP</td>
+                                    <td class="py-3.5 px-4 text-right font-mono text-slate-500 font-medium">{{ "{:,.0f}".format(ut.min_price or 0) }} EGP</td>
+                                    <td class="py-3.5 px-4 text-right font-mono text-slate-500 font-medium">{{ "{:,.0f}".format(ut.max_price or 0) }} EGP</td>
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="5" class="py-8 text-center text-gray-500">No active listings found for this development.</td>
+                                    <td colspan="5" class="py-10 text-center text-slate-400 font-medium">No active listings found for this development.</td>
                                 </tr>
                             {% endfor %}
                             
                             <!-- All Types Total Row -->
                             {% if dev_data.unit_types %}
-                            <tr class="bg-gray-900/90 font-bold border-t-2 border-gray-700 text-white">
-                                <td class="py-3 px-4 text-teal-400">{{ dev_data.total_row.type_name }}</td>
-                                <td class="py-3 px-4 text-right text-teal-400">{{ dev_data.total_row.listing_count }}</td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">{{ "{:,.0f}".format(dev_data.total_row.avg_price_sqm or 0) }} EGP</td>
-                                <td class="py-3 px-4 text-right font-mono">{{ "{:,.0f}".format(dev_data.total_row.min_price or 0) }} EGP</td>
-                                <td class="py-3 px-4 text-right font-mono">{{ "{:,.0f}".format(dev_data.total_row.max_price or 0) }} EGP</td>
+                            <tr class="bg-teal-50/70 font-extrabold border-t-2 border-teal-200 text-slate-900">
+                                <td class="py-3.5 px-4 text-teal-800">{{ dev_data.total_row.type_name }}</td>
+                                <td class="py-3.5 px-4 text-right text-teal-800">{{ dev_data.total_row.listing_count }}</td>
+                                <td class="py-3.5 px-4 text-right font-mono text-teal-800 font-black">{{ "{:,.0f}".format(dev_data.total_row.avg_price_sqm or 0) }} EGP</td>
+                                <td class="py-3.5 px-4 text-right font-mono text-slate-700">{{ "{:,.0f}".format(dev_data.total_row.min_price or 0) }} EGP</td>
+                                <td class="py-3.5 px-4 text-right font-mono text-slate-700">{{ "{:,.0f}".format(dev_data.total_row.max_price or 0) }} EGP</td>
                             </tr>
                             {% endif %}
                         </tbody>
@@ -179,18 +179,18 @@
             datasets: [{
                 label: 'Avg Price per m² (EGP)',
                 data: data5,
-                backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                backgroundColor: 'rgba(16, 185, 129, 0.85)',
                 borderColor: '#10b981',
                 borderWidth: 1,
-                borderRadius: 6
+                borderRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                x: { ticks: { color: '#475569', font: { size: 11, weight: 'bold' } }, grid: { display: false } },
+                y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(226, 232, 240, 0.8)' } }
             }
         }
     });
