@@ -150,3 +150,4 @@ python -m milestone3.tools.smoke_test --allow-local
 - [x] **Final Dump Verified:** `resale_properties_dump_final.sql` restored into clean test DB with 100% match in `restore_check.md`.
 - [x] **Executable & Run Scripts:** `run.bat` and `run.sh` provide zero-friction launching.
 - [x] **Live Demo Script:** Complete 5–8 minute presentation script and walkthrough in `milestone3/deliverables/demo/DEMO.md`.
+- [x] **Cloud Deployment on Render:** Blueprint (`render.yaml`), WSGI entrypoint (`wsgi.py`), and full deployment guide in `milestone3/docs/render_deployment.md`.

@@ -82,7 +82,14 @@ class DatabaseManager:
         
     def create_connection(self):
         """Creates a fresh, configured PyMySQL connection with timeouts and utf8mb4."""
-        ssl_config = {"ssl": {"fake_flag_to_enable_tls": True}} if self.ssl_enabled else {}
+        ssl_config = {}
+        if self.ssl_enabled:
+            import ssl
+            ssl_ctx = ssl.create_default_context()
+            ssl_ctx.check_hostname = False
+            ssl_ctx.verify_mode = ssl.CERT_NONE
+            ssl_config = {"ssl": ssl_ctx}
+
         return pymysql.connect(
             host=self.host,
             port=self.port,
