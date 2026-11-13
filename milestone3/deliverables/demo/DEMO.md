@@ -25,4 +25,21 @@
 ## Fallback Plan (If Remote Free Host Has Connectivity Outage During Demo)
 Free MySQL hosts (like `db4free.net`) occasionally experience transient downtime or maintenance. If the remote host is unreachable during a live evaluation:
 1. Show the friendly "Remote Database Unreachable" error page in the app, demonstrating that the application is genuinely connecting to the remote host over the network.
-2. Run `python -m milestone3.app.main --allow-local` to show the exact same database restored locally from `resale_properties_remote_ready.sql`. Clearly state that this is the approved offline demonstration fallback.
+2. Run `python -m milestone3.app.main --allow-local` to show the exact same database restored locally from `resale_properties_dump_final.sql`. Clearly state that this is the approved offline demonstration fallback.
+
+---
+
+## 3. Demo Evidence Screenshots Catalog
+The following high-resolution verification screenshots of the live application are available in [`milestone3/deliverables/demo/screenshots/`](screenshots/):
+
+* `00_dashboard.png`: Executive Dashboard with live metrics counters (9,628 properties, 6,279 developments, 3,056 developers).
+* `01_f01_registration.png`: User registration form with dynamic focus area selection and age derivation.
+* `02_f02_f03_reviews.png`: Project review submission and paginated community reviews list.
+* `03_f04_top_projects.png`: Top 10 development projects ranked by resale inventory, capital, and market gain.
+* `04_f05_dev_deep_dive.png`: Development deep-dive showing full geographic path, developer, and property type breakdown.
+* `05_f06_area_properties.png`: Area hierarchy property listings with Recursive Common Table Expression traversal.
+* `06_f07_amenities_filter.png`: Multi-amenity filtering with relational division toggle (`ALL` vs `ANY`).
+* `07_f08_top_developers.png`: Market leader rankings by resale listing inventory and financial averages.
+* `07_f08_top_developers.png`: Top 5 developers by inventory and average price per sqm.
+* `08_f09_matrix_slicing.png`: Multi-dimensional Area × Property Type × Contract Signing Year analytical matrix.
+* `09_f10_benchmark_averages.png`: Area & development benchmark averages with non-NULL sample verification and single-click CSV export.

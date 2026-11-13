@@ -2,7 +2,7 @@
 ### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties
 **Author:** Mennatallah Essam Zaher  
 **Instructor:** Prof. Mohamed Alhalaby — The American University in Cairo (AUC)  
-**Dump File Tested:** `milestone3/deliverables/resale_properties_remote_ready.sql` (5.31 MB, Pure UTF-8)  
+**Dump File Tested:** `milestone3/deliverables/resale_properties_dump_final.sql` (6.37 MB, Pure UTF-8)  
 **Test Database Restored Into:** `resale_properties_m3_restore_audit`  
 **Audit Timestamp:** 2026-11-13  
 
@@ -30,7 +30,7 @@ Arabic strings restored without character distortion, loss, or mojibake:
 
 - **English:** `Cairo` $\to$ **Arabic:** `القاهرة` (100% UTF-8 character match)
 - **English:** `New Administrative Capital` $\to$ **Arabic:** `العاصمة الإدارية الجديدة` (100% UTF-8 character match)
-- **English:** `New Administrative Capital` $\to$ **Arabic:** `العاصمة الإدارية الجديدة` (100% UTF-8 character match)
+- **English:** `Alexandria` $\to$ **Arabic:** `الإسكندرية` (100% UTF-8 character match)
 
 ---
 ## 3. Restoration Integrity Conclusion

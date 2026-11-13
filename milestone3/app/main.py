@@ -39,7 +39,11 @@ def create_app(allow_local: bool = False):
         template_folder="templates",
         static_folder="static"
     )
-    app.secret_key = os.getenv("APP_SECRET", "super_secret_m3_resale_key_auc_f26")
+    secret = os.getenv("APP_SECRET")
+    if not secret:
+        import secrets
+        secret = secrets.token_hex(32)
+    app.secret_key = secret
 
     # Global context processor to make remote DB host and current user available to all templates
     @app.context_processor
@@ -401,5 +405,6 @@ if __name__ == "__main__":
     app = create_app(allow_local=allow_local_flag)
     port = int(os.getenv("FLASK_PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "false").lower() in ("true", "1")
-    print(f"🚀 Starting AqarExit Analytics Web Server on http://127.0.0.1:{port}")
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    bind_host = os.getenv("APP_HOST", "127.0.0.1" if allow_local_flag else "0.0.0.0")
+    print(f"🚀 Starting AqarExit Analytics Web Server on http://{bind_host}:{port}")
+    app.run(host=bind_host, port=port, debug=debug)

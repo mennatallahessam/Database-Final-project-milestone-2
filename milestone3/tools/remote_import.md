@@ -30,7 +30,7 @@ Standard local mysqldumps contain server-level administrative statements that ar
 4. **Encoding:** Pure UTF-8 without Windows PowerShell UTF-16 LE byte-order marks.
 
 The clean, remote-compatible SQL script was saved at:
-`milestone3/deliverables/resale_properties_remote_ready.sql` (5.31 MB).
+`milestone3/deliverables/resale_properties_dump_final.sql` (6.37 MB).
 
 ---
 
