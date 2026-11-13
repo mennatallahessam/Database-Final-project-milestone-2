@@ -67,6 +67,8 @@ def create_app(allow_local: bool = False):
     # F01: User Registration & Session
     # -------------------------------------------------------------------------
     @app.route("/f01-register", methods=["GET", "POST"])
+    @app.route("/f01/register", methods=["GET", "POST"])
+    @app.route("/register", methods=["GET", "POST"])
     def f01_register():
         lookups = get_lookups()
         if request.method == "POST":
@@ -108,6 +110,9 @@ def create_app(allow_local: bool = False):
     # F02 & F03: Project Reviews
     # -------------------------------------------------------------------------
     @app.route("/reviews")
+    @app.route("/f02-f03-reviews")
+    @app.route("/f02/reviews")
+    @app.route("/f03/reviews")
     def f02_f03_reviews():
         search_query = request.args.get("search", "").strip()
         dev_id = request.args.get("dev_id", type=int)
@@ -157,6 +162,8 @@ def create_app(allow_local: bool = False):
     # F04: Top 10 Projects by Type
     # -------------------------------------------------------------------------
     @app.route("/f04-top-projects")
+    @app.route("/f04/top-projects")
+    @app.route("/top-projects")
     def f04_top_projects():
         lookups = get_lookups()
         pts = lookups["property_types"]
@@ -182,6 +189,9 @@ def create_app(allow_local: bool = False):
     # F05: Development Location & Pricing
     # -------------------------------------------------------------------------
     @app.route("/f05-development")
+    @app.route("/f05-dev-location")
+    @app.route("/f05/dev-location")
+    @app.route("/f05/development")
     def f05_dev_location():
         search_query = request.args.get("search", "").strip()
         dev_id = request.args.get("dev_id", type=int)
@@ -205,6 +215,8 @@ def create_app(allow_local: bool = False):
     # F06: Area Hierarchy & Listings
     # -------------------------------------------------------------------------
     @app.route("/f06-area-properties")
+    @app.route("/f06/area-properties")
+    @app.route("/area-properties")
     def f06_area_properties():
         lookups = get_lookups()
         locations = lookups["locations"]
@@ -228,6 +240,10 @@ def create_app(allow_local: bool = False):
     # F07: Multi-Amenity Search
     # -------------------------------------------------------------------------
     @app.route("/f07-amenity-filter")
+    @app.route("/f07/amenity-filter")
+    @app.route("/f07/amenities")
+    @app.route("/f07-amenities")
+    @app.route("/amenities")
     def f07_amenity_filter():
         lookups = get_lookups()
         locations = lookups["locations"]
@@ -264,6 +280,8 @@ def create_app(allow_local: bool = False):
     # F08: Top 5 Developers
     # -------------------------------------------------------------------------
     @app.route("/f08-top-developers")
+    @app.route("/f08/top-developers")
+    @app.route("/top-developers")
     def f08_top_developers():
         lookups = get_lookups()
         pts = lookups["property_types"]
@@ -282,6 +300,7 @@ def create_app(allow_local: bool = False):
     # F09: Area × Type × Year Matrix
     # -------------------------------------------------------------------------
     @app.route("/f09-area-type-year")
+    @app.route("/f09/area-type-year")
     def f09_area_type_year():
         lookups = get_lookups()
         locations = lookups["locations"]
@@ -310,6 +329,8 @@ def create_app(allow_local: bool = False):
     # F10: Area & Development Benchmark Averages
     # -------------------------------------------------------------------------
     @app.route("/f10-averages")
+    @app.route("/f10/averages")
+    @app.route("/averages")
     def f10_averages():
         lookups = get_lookups()
         locations = lookups["locations"]
@@ -336,6 +357,8 @@ def create_app(allow_local: bool = False):
         )
 
     @app.route("/f10-export-csv")
+    @app.route("/f10/export-csv")
+    @app.route("/export-csv")
     def f10_export_csv():
         area_id = request.args.get("area_id", type=int)
         min_prop = request.args.get("min_prop", 3, type=int)
