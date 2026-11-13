@@ -347,10 +347,16 @@ def create_app(allow_local: bool = False):
             sort_col=sort_col, sort_dir=sort_dir, export_csv=True
         )
 
+        # Encode with utf-8-sig (UTF-8 with BOM) so Excel and spreadsheet apps render Arabic text cleanly without mojibake
+        csv_bytes = csv_content.encode("utf-8-sig")
+
         return Response(
-            csv_content,
-            mimetype="text/csv",
-            headers={"Content-Disposition": "attachment;filename=aqarexit_f10_benchmark_averages.csv"}
+            csv_bytes,
+            mimetype="text/csv; charset=utf-8",
+            headers={
+                "Content-Disposition": "attachment; filename=aqarexit_f10_benchmark_averages.csv",
+                "Content-Type": "text/csv; charset=utf-8"
+            }
         )
 
     # -------------------------------------------------------------------------
