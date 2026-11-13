@@ -4,86 +4,136 @@
 
 {% block content %}
 <div class="space-y-10">
-    <!-- Hero Banner (Bright & Vibrant) -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-teal-50/40 to-emerald-50/50 p-8 sm:p-10 border border-slate-200/80 shadow-sm">
-        <div class="absolute -right-12 -bottom-12 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="max-w-3xl space-y-4">
-            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-100/80 border border-teal-300 text-teal-800 text-xs font-bold shadow-xs">
-                <span>MySQL 8.0 Remote Analytics Engine</span>
+    <!-- Hero Banner (Ultra-Bright, Luminous, Executive Grade) -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-teal-50/60 to-emerald-50/60 p-8 sm:p-12 border border-slate-200 shadow-sm">
+        <div class="absolute -right-10 -top-10 w-96 h-96 bg-teal-300/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -bottom-10 w-96 h-96 bg-emerald-300/15 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="relative z-10 max-w-3xl space-y-4">
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-teal-200 text-teal-800 text-xs font-extrabold shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>MySQL 8.0 Remote Analytics Engine • Live & Ready</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Egyptian Real-Estate Resale Market Intelligence
+            
+            <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                Egyptian Real-Estate <span class="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">Resale Market</span> Intelligence
             </h1>
-            <p class="text-slate-600 text-base leading-relaxed">
-                Connects directly to an external remote MySQL database containing <strong>9,628 scraped AqarExit opportunity listings</strong>, <strong>6,279 master developments</strong>, and <strong>207 geographic hierarchy areas</strong> across Egypt.
+            
+            <p class="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
+                An end-to-end database platform connecting directly to an external remote MySQL server with <strong>9,628 scraped AqarExit opportunity listings</strong>, <strong>6,279 master developments</strong>, and <strong>207 geographic hierarchy areas</strong> across Egypt.
             </p>
+
+            <div class="pt-2 flex flex-wrap gap-3">
+                <a href="{{ url_for('f04_top_projects') }}" class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-teal-600 text-white font-bold text-xs hover:bg-teal-700 transition shadow-md shadow-teal-600/20">
+                    <span>Explore Market Analytics</span>
+                    <span>→</span>
+                </a>
+                <a href="{{ url_for('f01_register') }}" class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-white text-slate-800 border border-slate-300 font-bold text-xs hover:bg-slate-50 transition shadow-2xs">
+                    <span>User Registration (F01)</span>
+                </a>
+            </div>
         </div>
         
-        <!-- Live Database Metrics -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-200">
-            <div class="p-3 bg-white/70 rounded-2xl border border-slate-200/80">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Properties Crawled</p>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">9,628</p>
-                <p class="text-xs font-semibold text-emerald-600 mt-0.5">✓ 100% of website</p>
+        <!-- Live Remote Database Metrics (4 Bright Color-Coded Cards) -->
+        <div class="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10 pt-8 border-t border-slate-200/80">
+            <!-- Properties Crawled -->
+            <div class="p-5 bg-white rounded-2xl border border-emerald-200/80 shadow-2xs hover:shadow-sm transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Properties</span>
+                    <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-sm">🏢</span>
+                </div>
+                <p class="text-3xl font-black text-slate-900 mt-2">9,628</p>
+                <div class="flex items-center space-x-1.5 mt-1 text-xs font-bold text-emerald-700">
+                    <span>✓</span>
+                    <span>100% of website crawled</span>
+                </div>
             </div>
-            <div class="p-3 bg-white/70 rounded-2xl border border-slate-200/80">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Developments</p>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">6,279</p>
-                <p class="text-xs font-semibold text-teal-600 mt-0.5">Master compounds</p>
+
+            <!-- Master Compounds -->
+            <div class="p-5 bg-white rounded-2xl border border-teal-200/80 shadow-2xs hover:shadow-sm transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Developments</span>
+                    <span class="p-1.5 rounded-lg bg-teal-50 text-teal-600 text-sm">🏗️</span>
+                </div>
+                <p class="text-3xl font-black text-slate-900 mt-2">6,279</p>
+                <div class="flex items-center space-x-1.5 mt-1 text-xs font-bold text-teal-700">
+                    <span>★</span>
+                    <span>Master compounds</span>
+                </div>
             </div>
-            <div class="p-3 bg-white/70 rounded-2xl border border-slate-200/80">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Developers</p>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">3,056</p>
-                <p class="text-xs font-semibold text-cyan-700 mt-0.5">Corporate builders</p>
+
+            <!-- Developers -->
+            <div class="p-5 bg-white rounded-2xl border border-sky-200/80 shadow-2xs hover:shadow-sm transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Developers</span>
+                    <span class="p-1.5 rounded-lg bg-sky-50 text-sky-600 text-sm">🏛️</span>
+                </div>
+                <p class="text-3xl font-black text-slate-900 mt-2">3,056</p>
+                <div class="flex items-center space-x-1.5 mt-1 text-xs font-bold text-sky-700">
+                    <span>🏢</span>
+                    <span>Corporate builders</span>
+                </div>
             </div>
-            <div class="p-3 bg-white/70 rounded-2xl border border-slate-200/80">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Geographic Areas</p>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">207</p>
-                <p class="text-xs font-semibold text-indigo-600 mt-0.5">3-tier hierarchy</p>
+
+            <!-- Geographic Areas -->
+            <div class="p-5 bg-white rounded-2xl border border-indigo-200/80 shadow-2xs hover:shadow-sm transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Locations</span>
+                    <span class="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 text-sm">🗺️</span>
+                </div>
+                <p class="text-3xl font-black text-slate-900 mt-2">207</p>
+                <div class="flex items-center space-x-1.5 mt-1 text-xs font-bold text-indigo-700">
+                    <span>↳</span>
+                    <span>3-tier tree hierarchy</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Group 1: User Profiles & Development Reviews -->
     <div class="space-y-4">
-        <h2 class="text-xl font-extrabold text-slate-900 flex items-center space-x-2.5">
-            <span class="w-3 h-3 rounded-full bg-teal-600"></span>
-            <span>Part 1: Account Management & Development Reviews</span>
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-black text-slate-900 flex items-center space-x-2.5">
+                <span class="w-3.5 h-3.5 rounded-lg bg-teal-600 shadow-xs"></span>
+                <span>Part 1: Account Management & Development Reviews</span>
+            </h2>
+            <span class="text-xs text-slate-500 font-semibold">F01 to F03 Functionalities</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- F01 Card -->
-            <a href="{{ url_for('f01_register') }}" class="glass-card p-6 rounded-2xl hover:border-teal-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f01_register') }}" class="glass-card p-7 rounded-3xl hover:border-teal-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">F01</span>
-                        <span class="text-slate-400 group-hover:text-teal-600 group-hover:translate-x-1 transition transform font-bold">→</span>
+                        <span class="text-xs font-mono font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1 rounded-lg">F01</span>
+                        <span class="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-teal-600 text-slate-400 group-hover:text-white flex items-center justify-center text-sm font-bold transition transform group-hover:translate-x-1 shadow-2xs">→</span>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 mt-3 group-hover:text-teal-700 transition">User Registration</h3>
-                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-                        Register user accounts with validated demographics (email, unique username, gender, birthdate, dynamically derived age) and multi-select geographic focus areas in a <strong>single atomic transaction</strong>.
+                    <h3 class="text-xl font-bold text-slate-900 mt-4 group-hover:text-teal-700 transition">User Registration & Derived Age</h3>
+                    <p class="text-sm text-slate-600 mt-2.5 leading-relaxed font-normal">
+                        Register user accounts with validated demographics (email regex, unique username, gender, birthdate reality) and multi-select geographic focus areas in a <strong>single atomic transaction</strong>. User age is computed dynamically via view <code class="text-teal-800 font-bold bg-teal-50 px-1.5 py-0.5 rounded">v_user_profile</code>.
                     </p>
                 </div>
-                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
-                    <span>Tables: <code class="text-teal-700 font-bold">app_user</code>, <code class="text-teal-700 font-bold">user_focus_area</code></span>
-                    <span class="text-teal-600 font-bold">Open F01 →</span>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+                    <span>Tables: <code class="text-teal-800 font-bold">app_user</code>, <code class="text-teal-800 font-bold">user_focus_area</code></span>
+                    <span class="text-teal-700 font-bold group-hover:underline">Launch F01 Registration →</span>
                 </div>
             </a>
 
             <!-- F02 / F03 Card -->
-            <a href="{{ url_for('f02_f03_reviews') }}" class="glass-card p-6 rounded-2xl hover:border-teal-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f02_f03_reviews') }}" class="glass-card p-7 rounded-3xl hover:border-amber-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">F02 / F03</span>
-                        <span class="text-slate-400 group-hover:text-teal-600 group-hover:translate-x-1 transition transform font-bold">→</span>
+                        <span class="text-xs font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg">F02 / F03</span>
+                        <span class="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-amber-600 text-slate-400 group-hover:text-white flex items-center justify-center text-sm font-bold transition transform group-hover:translate-x-1 shadow-2xs">→</span>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 mt-3 group-hover:text-teal-700 transition">Development Reviews</h3>
-                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-                        Post verified 1–10 project ratings with textual reviews and inspect existing community feedback, average score distributions, and reviewer history for any compound.
+                    <h3 class="text-xl font-bold text-slate-900 mt-4 group-hover:text-amber-700 transition">Development Project Reviews</h3>
+                    <p class="text-sm text-slate-600 mt-2.5 leading-relaxed font-normal">
+                        Post verified 1–10 project ratings with textual reviews and inspect existing community feedback, average score distributions, and reviewer history for any compound across Egypt.
                     </p>
                 </div>
-                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
-                    <span>Tables: <code class="text-teal-700 font-bold">review</code>, <code class="text-teal-700 font-bold">development</code></span>
-                    <span class="text-teal-600 font-bold">Open Reviews →</span>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+                    <span>Tables: <code class="text-amber-800 font-bold">review</code>, <code class="text-amber-800 font-bold">development</code></span>
+                    <span class="text-amber-700 font-bold group-hover:underline">Explore Reviews →</span>
                 </div>
             </a>
         </div>
@@ -91,100 +141,145 @@
 
     <!-- Group 2: Resale Market Analytics -->
     <div class="space-y-4">
-        <h2 class="text-xl font-extrabold text-slate-900 flex items-center space-x-2.5">
-            <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
-            <span>Part 2: Real-Estate Market Analytics (F04 – F10)</span>
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-black text-slate-900 flex items-center space-x-2.5">
+                <span class="w-3.5 h-3.5 rounded-lg bg-emerald-600 shadow-xs"></span>
+                <span>Part 2: Real-Estate Market Analytics (F04 – F10)</span>
+            </h2>
+            <span class="text-xs text-slate-500 font-semibold">Analytical Intelligence</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- F04 -->
-            <a href="{{ url_for('f04_top_projects') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f04_top_projects') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F04</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Top 10 Projects by Type</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-lg">F04</span>
+                        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Chart Included</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-emerald-700 transition">Top 10 Projects by Type</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Ranks projects across three tabs: resale inventory, total resale capital, and average gain over market value with outlier exclusion toggles.
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Aggregation & Windowing →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-bold">
+                    <span>Three-Way Ranking</span>
+                    <span>View Projects →</span>
+                </div>
             </a>
 
             <!-- F05 -->
-            <a href="{{ url_for('f05_dev_location') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f05_dev_location') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-teal-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F05</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Development Deep Dive</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                        Inspects developer, full location path, real GPS coordinates status, and price/sqm breakdown across all unit types.
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1 rounded-lg">F05</span>
+                        <span class="text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded">Hierarchy Deep Dive</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-teal-700 transition">Development Deep Dive</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
+                        Inspects developer, full location path, real GPS coordinates status (strictly NULL where not on AqarExit), and price/sqm breakdown across all unit types.
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Breadcrumb Hierarchy →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-teal-700 font-bold">
+                    <span>All Types Total Row</span>
+                    <span>Search Development →</span>
+                </div>
             </a>
 
             <!-- F06 -->
-            <a href="{{ url_for('f06_area_properties') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f06_area_properties') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-sky-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F06</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Area Hierarchy Explorer</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-sky-800 bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">F06</span>
+                        <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded">Recursive CTE</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-sky-700 transition">Area Hierarchy Explorer</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Explores all properties in any governorate or city using Recursive CTEs with unit type averages and paginated sortable listings.
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Recursive CTE →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-sky-700 font-bold">
+                    <span>Tree Traversal</span>
+                    <span>Browse Areas →</span>
+                </div>
             </a>
 
             <!-- F07 -->
-            <a href="{{ url_for('f07_amenity_filter') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f07_amenity_filter') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-rose-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F07</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Multi-Amenity Search</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1 rounded-lg">F07</span>
+                        <span class="text-xs font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">Relational Division</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-rose-700 transition">Multi-Amenity Search</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Filters properties by geographic area, price bounds, and selected amenities enforcing strict relational division (has ALL amenities).
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Relational Division →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-rose-700 font-bold">
+                    <span>ALL vs ANY Toggle</span>
+                    <span>Search Amenities →</span>
+                </div>
             </a>
 
             <!-- F08 -->
-            <a href="{{ url_for('f08_top_developers') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f08_top_developers') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-indigo-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F08</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Top 5 Real-Estate Developers</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-lg">F08</span>
+                        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">Top 5 Leaders</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-indigo-700 transition">Top 5 Real-Estate Developers</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Identifies market-leading builders ranked by inventory with average price/sqm, down payment ratio, and buyer gain metrics.
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Developer Analytics →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-indigo-700 font-bold">
+                    <span>Developer Analytics</span>
+                    <span>View Leaders →</span>
+                </div>
             </a>
 
             <!-- F09 -->
-            <a href="{{ url_for('f09_area_type_year') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between">
+            <a href="{{ url_for('f09_area_type_year') }}" class="glass-card p-6 sm:p-7 rounded-3xl hover:border-purple-400 hover:shadow-md transition group flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F09</span>
-                    <h3 class="text-base font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Area × Type × Year Matrix</h3>
-                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold text-purple-800 bg-purple-50 border border-purple-200 px-3 py-1 rounded-lg">F09</span>
+                        <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">3D Slicing</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mt-4 group-hover:text-purple-700 transition">Area × Type × Year Matrix</h3>
+                    <p class="text-xs text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Multi-dimensional summary slicing resale opportunities across geographic areas, property types, and contract signing years.
                     </p>
                 </div>
-                <span class="text-xs font-semibold text-emerald-600 mt-4 block">Multi-Dimension Matrix →</span>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-purple-700 font-bold">
+                    <span>Clustering & Drill-Down</span>
+                    <span>Explore Matrix →</span>
+                </div>
             </a>
 
-            <!-- F10 Card (Full width on bottom) -->
-            <a href="{{ url_for('f10_averages') }}" class="glass-card p-6 rounded-2xl hover:border-emerald-400 hover:shadow-md transition group flex flex-col justify-between md:col-span-2 lg:col-span-3">
-                <div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">F10</span>
-                        <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 font-bold px-3 py-1 rounded-full">CSV Export Included</span>
+            <!-- F10 Card (Full width on bottom with CSV export highlight) -->
+            <div class="glass-card p-8 rounded-3xl border border-emerald-300 bg-gradient-to-br from-white via-emerald-50/40 to-teal-50/40 shadow-xs md:col-span-2 lg:col-span-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs font-mono font-bold text-emerald-800 bg-emerald-100/80 border border-emerald-200 px-3 py-1 rounded-lg">F10</span>
+                        <span class="text-xs text-emerald-800 bg-emerald-100/80 border border-emerald-200 font-bold px-3 py-1 rounded-full">Single-Click CSV Export</span>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 mt-3 group-hover:text-emerald-700 transition">Area & Development Benchmark Averages</h3>
-                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">
-                        Computes comprehensive averages per (area, development): average installment, required down payment, property count, discount over market price, contract vintage age, and market valuation with column sorting and single-click CSV export.
-                    </p>
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ url_for('f10_averages') }}" class="px-5 py-2.5 rounded-xl bg-teal-600 text-white font-bold text-xs hover:bg-teal-700 transition shadow-sm">
+                            Open Benchmark Table
+                        </a>
+                        <a href="{{ url_for('f10_export_csv') }}" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition shadow-sm">
+                            ⬇ Export CSV
+                        </a>
+                    </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-between items-center font-medium">
-                    <span>Includes sample contribution counts to prevent NULL skew</span>
-                    <span class="text-emerald-700 font-bold">Open Benchmark Table →</span>
-                </div>
-            </a>
+                
+                <h3 class="text-xl font-extrabold text-slate-900 mt-4">Area & Development Benchmark Averages</h3>
+                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                    Computes comprehensive averages per (area, development): average installment, required down payment, property count, discount over market price, contract vintage age, and market valuation. Includes sample contribution counts (e.g. <code class="font-bold text-emerald-800 bg-emerald-100/60 px-1 py-0.5 rounded">(12/15)</code>) to prevent misleading averages from unpopulated fields.
+                </p>
+            </div>
         </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 # Resale Properties Database & Crawling System
 ### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties (Fall 2026)
 **Author:** Mennatallah Essam Zaher  
-**Instructor:** Prof. Hossam Sharara — The American University in Cairo (AUC)  
+**Instructor:** Prof. Mohamed Alhalaby — The American University in Cairo (AUC)  
 **Target Platform:** [AqarExit](https://aqarexit.com) (`https://aqarexit.com/en/opportunities`)  
 **Database Engine:** MySQL 8.0+ (InnoDB, `utf8mb4`, `utf8mb4_unicode_ci`)  
 **Generated On:** 2026-11-02  

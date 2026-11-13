@@ -110,7 +110,7 @@ def run_restore_audit():
         "# Milestone III: Database Dump Clean Restoration Verification",
         "### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties",
         "**Author:** Mennatallah Essam Zaher  ",
-        "**Instructor:** Prof. Hossam Sharara — The American University in Cairo (AUC)  ",
+        "**Instructor:** Prof. Mohamed Alhalaby — The American University in Cairo (AUC)  ",
         "**Dump File Tested:** `milestone3/deliverables/resale_properties_remote_ready.sql` (5.31 MB, Pure UTF-8)  ",
         "**Test Database Restored Into:** `resale_properties_m3_restore_audit`  ",
         "**Audit Timestamp:** 2026-11-13  \n",

@@ -1,7 +1,7 @@
 # Milestone 1: Resale Properties Database Design & Physical Implementation
 ### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties (Fall 2026)
 **Author:** Mennatallah Essam Zaher  
-**Instructor:** Prof. Hossam Sharara (The American University in Cairo)
+**Instructor:** Prof. Mohamed Alhalaby (The American University in Cairo)
 
 ---
 

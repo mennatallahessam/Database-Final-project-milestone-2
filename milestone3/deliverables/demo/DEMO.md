@@ -1,7 +1,7 @@
 # Milestone III: Live Demo Script & Walkthrough (5–8 Minutes)
 ### CSCE 2501 – Fundamentals of Database Systems – Project: Resale Properties
 **Author:** Mennatallah Essam Zaher  
-**Instructor:** Prof. Hossam Sharara — The American University in Cairo (AUC)  
+**Instructor:** Prof. Mohamed Alhalaby — The American University in Cairo (AUC)  
 
 ---
 
