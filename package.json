@@ -1,8 +1,0 @@
-{
-  "name": "aqarexit-analytics",
-  "version": "1.0.0",
-  "description": "Egyptian Real-Estate Resale Market Intelligence - AUC CSCE 2501",
-  "scripts": {
-    "start": "gunicorn wsgi:app"
-  }
-}
