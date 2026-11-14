@@ -5,7 +5,32 @@
 
 ---
 
-## Demo Script Overview
+## 1. Recorded Video Demo Walkthrough
+
+A complete, high-definition recording of the live application demonstrating all 10 project functionalities is included in this directory:
+
+* **Video File:** [`aqarexit_milestone3_demo.mp4`](aqarexit_milestone3_demo.mp4) (H.264 / AAC, 1440x900 HD, 6.09 MB)
+* **Automated Recorder Script:** [`milestone3/tools/record_demo.py`](../../tools/record_demo.py)
+
+### Video Recording Timeline & Functionalities Shown:
+| Timestamp | Scene / Feature | What Is Demonstrated |
+| :---: | :--- | :--- |
+| **0:00–0:10** | **Executive Dashboard** | Live database counters (9,628 properties, 6,279 developments, 3,056 developers, 207 areas), luminous UI, and quick feature CTA shortcuts. |
+| **0:10–0:16** | **Navigation Dropdowns** | Interactive hover & click navigation menus for *Market Analytics* and *Account & Reviews*. |
+| **0:16–0:24** | **F01: User Registration** | Completing registration with multi-select focus areas; atomic transaction confirmation showing dynamic derived age (`Derived Age: 28`). |
+| **0:24–0:33** | **F02 & F03: Project Reviews** | Community reviews for *Patio Vida*, submitting 9/10 score, updated project statistics and rating display. |
+| **0:33–0:42** | **F04: Top 10 Projects** | 3-way ranking tabs (*Resale Inventory*, *Resale Capital*, *Gain Over Market Value*) and interactive Chart.js bar graphs. |
+| **0:42–0:48** | **F05: Development Deep Dive** | Full location breadcrumb (*Giza -> 6th of October -> Badya*), developer name, coordinates status, and unit type breakdown table with total row. |
+| **0:48–0:55** | **F06: Area Hierarchy (Recursive CTE)** | Recursive Common Table Expression traversing New Cairo hierarchy with sortable properties table. |
+| **0:55–1:02** | **F07: Amenities Multi-Filter** | Relational division query enforcing `ALL` selected amenities with toggle for `ANY`. |
+| **1:02–1:07** | **F08: Top 5 Developers** | Market leader rankings by listing inventory, price/sqm, required down payment %, and capital. |
+| **1:07–1:12** | **F09: Area × Type × Year Matrix** | Multi-dimensional matrix slicing resale opportunities across geographic areas, property types, and contract vintage years. |
+| **1:12–1:15** | **F10: Benchmark Averages & CSV Export** | Benchmark averages with sample contribution counts (`(12/15)`) and single-click UTF-8 BOM CSV export. |
+| **1:15–1:18** | **Wrap-Up & Remote Proof** | Return to dashboard, scrolling down to the footer displaying the remote database host verification badge. |
+
+---
+
+## 2. Live Demo Script & Walkthrough (For Live Presentation)
 
 | Step | Time | Functionality | Exact Demo Inputs | Key Point to Explain to Grader / Instructor |
 | :---: | :---: | :--- | :--- | :--- |
@@ -22,14 +47,14 @@
 
 ---
 
-## Fallback Plan (If Remote Free Host Has Connectivity Outage During Demo)
+## 3. Fallback Plan (If Remote Free Host Has Connectivity Outage During Demo)
 Free MySQL hosts (like `db4free.net`) occasionally experience transient downtime or maintenance. If the remote host is unreachable during a live evaluation:
 1. Show the friendly "Remote Database Unreachable" error page in the app, demonstrating that the application is genuinely connecting to the remote host over the network.
 2. Run `python -m milestone3.app.main --allow-local` to show the exact same database restored locally from `resale_properties_dump_final.sql`. Clearly state that this is the approved offline demonstration fallback.
 
 ---
 
-## 3. Demo Evidence Screenshots Catalog
+## 4. Demo Evidence Screenshots Catalog
 The following high-resolution verification screenshots of the live application are available in [`milestone3/deliverables/demo/screenshots/`](screenshots/):
 
 * `00_dashboard.png`: Executive Dashboard with live metrics counters (9,628 properties, 6,279 developments, 3,056 developers).

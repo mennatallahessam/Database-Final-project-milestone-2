@@ -15,7 +15,7 @@
 | :--- | :--- | :--- |
 | **Deliverable 1: Source Code + Executable** | • `milestone3/run.bat`<br>• `milestone3/run.sh`<br>• `milestone3/app/`<br>• `milestone3/requirements.txt` | Complete responsive web application built with Python 3.11+, Flask, Tailwind CSS, Chart.js, and PyMySQL. Launched with a single click via `run.bat` or `run.sh`. |
 | **Deliverable 2: Latest Database Dump** | • `milestone3/deliverables/resale_properties_dump_final.sql`<br>• `milestone3/deliverables/restore_check.md` | Pure UTF-8 database dump (6.37 MB) stripped of `DEFINER` clauses for shared/remote host portability. Verified by clean restoration with 100% table row count match across all 9,628 properties. |
-| **Deliverable 3: Demo Script & Evidence** | • `milestone3/deliverables/demo/DEMO.md`<br>• `milestone3/deliverables/demo/screenshots/` | 5-to-8 minute live demo presentation script with exact step-by-step inputs, timing, fallback procedures, and verification screenshots. |
+| **Deliverable 3: Demo Recording & Evidence** | • `milestone3/deliverables/demo/aqarexit_milestone3_demo.mp4`<br>• `milestone3/deliverables/demo/DEMO.md`<br>• `milestone3/deliverables/demo/screenshots/` | Complete HD video walkthrough (`aqarexit_milestone3_demo.mp4`, 6.09 MB), 5-to-8 minute live presentation script, and full screenshot gallery covering all 10 functionalities. |
 
 ---
 

@@ -46,8 +46,9 @@ This repository contains the complete implementation for **Milestone I** (Databa
    - One-click launcher executables: [`milestone3/run.bat`](milestone3/run.bat) (Windows) and [`milestone3/run.sh`](milestone3/run.sh) (Linux/macOS), documented in [`milestone3/deliverables/executable/README.md`](milestone3/deliverables/executable/README.md).
 2. **Latest Remote-Portable Database Dump (Deliverable 2)**:
    - [`milestone3/deliverables/resale_properties_dump_final.sql`](milestone3/deliverables/resale_properties_dump_final.sql): Pure UTF-8 database dump (6.37 MB) stripped of `DEFINER` clauses for remote host portability, verified with 100% table row count match across all 9,628 properties in [`milestone3/deliverables/restore_check.md`](milestone3/deliverables/restore_check.md).
-3. **Live Demo Script & Audit Verification (Deliverable 3)**:
-   - [`milestone3/deliverables/demo/DEMO.md`](milestone3/deliverables/demo/DEMO.md): 5-to-8 minute live demonstration script with exact inputs, timing, and fallback procedures.
+3. **Video Demo Walkthrough & Evidence (Deliverable 3)**:
+   - [`milestone3/deliverables/demo/aqarexit_milestone3_demo.mp4`](milestone3/deliverables/demo/aqarexit_milestone3_demo.mp4): Complete 1440x900 HD video recording (6.09 MB) walking through the executive dashboard and all 10 project functionalities with interactive inputs and data downloads.
+   - [`milestone3/deliverables/demo/DEMO.md`](milestone3/deliverables/demo/DEMO.md): 5-to-8 minute live demonstration script and video timeline index.
    - [`milestone3/tools/verify_remote.py`](milestone3/tools/verify_remote.py): Remote database connectivity, row-count parity, and latency verification tool.
    - [`milestone3/deliverables/demo/screenshots/`](milestone3/deliverables/demo/screenshots/): Full visual verification gallery for all application views.
 
